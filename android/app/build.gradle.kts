@@ -4,7 +4,16 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+val launcherResources = providers.environmentVariable("PORTAL_LAUNCHER_RES")
+    .map { file(it) }
+    .getOrElse(file("${System.getProperty("user.home")}/.config/fleet-cards-demo/launcher-res"))
+val hasCompanyLauncher = launcherResources.isDirectory
+
 android {
+    if (hasCompanyLauncher) {
+        sourceSets.getByName("main").res.srcDir(launcherResources)
+    }
+
     namespace = "com.example.fleet_cards_demo"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
@@ -16,6 +25,8 @@ android {
 
     defaultConfig {
         applicationId = "com.example.fleet_cards_demo"
+        manifestPlaceholders["portalLauncherIcon"] =
+            if (hasCompanyLauncher) "@mipmap/ic_launcher" else "@drawable/ic_fleet_launcher"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24

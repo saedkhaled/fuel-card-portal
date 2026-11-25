@@ -3,7 +3,7 @@
         android:label="Fleet Cards Demo"
         android:supportsRtl="true"
         android:name="${applicationName}"
-        android:icon="@drawable/ic_fleet_launcher">
+        android:icon="${portalLauncherIcon}">
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.exports"

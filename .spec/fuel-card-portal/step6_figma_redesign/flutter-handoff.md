@@ -77,3 +77,10 @@ Re-run [V01–V09](../verification.md#automated-coverage) after implementation. 
 - The Android save adapter opens the saved document with its original MIME type and a read-only URI grant after the output stream closes. A missing viewer leaves the file saved. Canceling the picker leaves the app on the originating screen.
 - Verified the branded release on Android 16/API 36 in airplane mode. A temporary test viewer opened the saved CSV and read its rows, and opened the saved XLSX and read its worksheet entry. After removing the test viewer, CSV still saved to Downloads. The downloaded 512 × 512 QR PNG opened in Google Photos. The CSV picker cancellation returned to Balances.
 - `flutter analyze --no-pub` and all 27 local tests passed. Built `fleet-cards-open-after-save.apk` with `flutter build apk --release --dart-define-from-file=<brand-json>`. SHA-256 `9762a57f1d6631053f0fa4fd38cbb10440c8154da85bc793c6a699e387a5d3ed`.
+
+## Original launcher icon follow-up
+
+- On branch `codex/fuel-card-portal` at `7aea3d0`, added an Android build option for the user-supplied Stage launcher resources. The brand artwork is supplied from `~/.config/fleet-cards-demo/launcher-res` and remains outside Git. The Stage APK SHA-256 is `9e49e4d15367aa65aa73f4ae02d2845a9475c02e86c11684743adafcab55b47f`.
+- `aapt2 dump resources` and `aapt2 dump xmltree` confirmed the legacy mipmaps and adaptive foreground in five densities, the white background, and the Stage inset. All ten packaged PNGs matched the original APK byte for byte. With `PORTAL_LAUNCHER_RES` pointed at an absent directory, `./gradlew --offline :app:processReleaseMainManifest` resolved the demo icon.
+- Built with `flutter build apk --release --target-platform android-arm64`. `apksigner verify` passed. APK `/tmp/fleet-launcher-qa.vx6jNL/fleet-cards-golden-gate-branded-arm64.apk`, SHA-256 `fd46362180456b0ae88a4564adc285cf049049dc310c0644a02281153294ea79`.
+- Installed with `adb -s emulator-5554 install -r` on Android 16/API 36. Compared the icons in Android App Info. The two 144 × 144 icon crops were pixel-identical. Launched the updated app and confirmed its activity was in the foreground.
