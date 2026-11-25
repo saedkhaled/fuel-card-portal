@@ -1,6 +1,7 @@
 package com.example.fleet_cards_demo
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.ClipData
 import android.content.Intent
 import android.net.Uri
@@ -11,7 +12,11 @@ import io.flutter.plugin.common.MethodChannel
 import java.io.File
 
 class MainActivity : FlutterActivity() {
-    private data class PendingSave(val bytes: ByteArray, val result: MethodChannel.Result)
+    private data class PendingSave(
+        val mime: String,
+        val bytes: ByteArray,
+        val result: MethodChannel.Result,
+    )
 
     private var pendingSave: PendingSave? = null
 
@@ -45,7 +50,7 @@ class MainActivity : FlutterActivity() {
                             type = mime
                             putExtra(Intent.EXTRA_TITLE, name)
                         }
-                        pendingSave = PendingSave(bytes, result)
+                        pendingSave = PendingSave(mime, bytes, result)
                         startActivityForResult(intent, saveRequestCode)
                     } else {
                         share(name, mime, bytes)
@@ -56,6 +61,20 @@ class MainActivity : FlutterActivity() {
                     result.error("file_action_failed", "Could not open Android file action", null)
                 }
             }
+    }
+
+    private fun openSavedDocument(uri: Uri, mime: String) {
+        val view = Intent(Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, mime)
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        try {
+            startActivity(view)
+        } catch (_: ActivityNotFoundException) {
+            // The document is saved even when the device has no app for this type.
+        } catch (_: SecurityException) {
+            // A document provider may allow saving without delegating read access.
+        }
     }
 
     private fun share(name: String, mime: String, bytes: ByteArray) {
@@ -83,9 +102,9 @@ class MainActivity : FlutterActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode != saveRequestCode) return
         val pending = pendingSave ?: return
-        pendingSave = null
         val uri: Uri? = data?.data
         if (resultCode != Activity.RESULT_OK || uri == null) {
+            pendingSave = null
             pending.result.success(false)
             return
         }
@@ -93,9 +112,17 @@ class MainActivity : FlutterActivity() {
             try {
                 val output = checkNotNull(contentResolver.openOutputStream(uri, "w"))
                 output.use { it.write(pending.bytes) }
-                runOnUiThread { pending.result.success(true) }
             } catch (_: Exception) {
-                runOnUiThread { pending.result.error("write_failed", "Could not save document", null) }
+                runOnUiThread {
+                    pendingSave = null
+                    pending.result.error("write_failed", "Could not save document", null)
+                }
+                return@Thread
+            }
+            runOnUiThread {
+                pendingSave = null
+                openSavedDocument(uri, pending.mime)
+                pending.result.success(true)
             }
         }.start()
     }
