@@ -20,3 +20,21 @@ The demo includes sign-in, session restoration, Home, Cards, fuel-card notes, Ba
 - [JSON fixture contract](.spec/fuel-card-portal/fixtures.md)
 - [Android acceptance checks](.spec/fuel-card-portal/verification.md)
 - [Implementation rules](AGENTS.md) and [execution handoff](.spec/fuel-card-portal/prompt.md)
+
+## Build a sideload APK
+
+The verified APK is at `build/android-acceptance/fleet-cards-demo-release.apk`. It was tested on Android 7.0 (API 24) and Android 16 (API 36). See the [acceptance handoff](.spec/fuel-card-portal/step5_android_acceptance/package.md) for the checksum and device results.
+
+```sh
+flutter pub get
+flutter build apk --release
+adb -s <android-device-id> install -r build/app/outputs/flutter-apk/app-release.apk
+```
+
+The release-mode demo uses the local Android debug key for sideloading. Use Flutter's normal build command so it regenerates the Android plugin registrant for release mode.
+
+The cross-feature test resets demo state on the test app installation. Run it against a disposable Android emulator.
+
+```sh
+flutter test integration_test/portal_smoke_test.dart -d <android-device-id>
+```

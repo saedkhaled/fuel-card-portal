@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 
 import '../../app/portal_destinations.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../account/account_scope.dart';
 import '../finance/finance_models.dart';
 import '../finance/finance_scope.dart';
 import '../finance/finance_widgets.dart';
@@ -17,6 +18,7 @@ class FleetHome extends StatelessWidget {
     final data = accountFinance(context);
     final labels = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+    final profile = accountProfile(context);
     final recent = data.recent;
     final counts = <OperationType, int>{};
     for (final operation in recent) {
@@ -29,6 +31,15 @@ class FleetHome extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 12),
           child: Text(labels.homeHeading, style: theme.textTheme.headlineSmall),
         ),
+        if (profile != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Text(
+              labels.fleetGreeting(
+                profile.company.inLanguage(labels.localeName),
+              ),
+            ),
+          ),
         BalanceHero(
           amountMinor: data.totalBalance,
           footer: Text('${labels.cardCount} · ${data.cards.length}'),

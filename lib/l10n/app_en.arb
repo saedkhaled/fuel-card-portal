@@ -150,7 +150,7 @@
       }
     }
   },
-  "searchStations": "Search stations by name or address",
+  "searchStations": "Search stations",
   "city": "City",
   "allCities": "All cities",
   "allProducts": "All products",
@@ -216,5 +216,13 @@
   "support": "Support",
   "supportPreview": "Demo support contact",
   "services": "Services",
-  "settings": "Settings"
+  "settings": "Settings",
+  "fleetGreeting": "Welcome, {company}",
+  "@fleetGreeting": {
+    "placeholders": {
+      "company": {
+        "type": "String"
+      }
+    }
+  }
 }

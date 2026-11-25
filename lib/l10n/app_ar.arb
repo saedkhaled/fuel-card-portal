@@ -108,7 +108,7 @@
   "exportFailed": "تعذّر تجهيز الملف. حاول مرة أخرى.",
   "noNotifications": "لا توجد إشعارات حتى الآن.",
   "liters": "{volume} لتر",
-  "searchStations": "ابحث عن محطة بالاسم أو العنوان",
+  "searchStations": "ابحث عن محطة",
   "city": "المدينة",
   "allCities": "كل المدن",
   "allProducts": "كل المنتجات",
@@ -174,5 +174,6 @@
   "support": "الدعم",
   "supportPreview": "جهة دعم تجريبية",
   "services": "الخدمات",
-  "settings": "الإعدادات"
+  "settings": "الإعدادات",
+  "fleetGreeting": "أهلاً بك، {company}"
 }

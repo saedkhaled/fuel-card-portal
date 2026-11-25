@@ -200,19 +200,33 @@ class _Availability extends StatelessWidget {
       runSpacing: 4,
       children: [
         for (final item in station.availability.entries)
-          Chip(
-            avatar: Icon(switch (item.value) {
-              FuelAvailability.available => Icons.check_circle_outline,
-              FuelAvailability.low => Icons.timelapse,
-              FuelAvailability.unavailable => Icons.remove_circle_outline,
-            }, size: 18),
-            label: Text(
-              '${network.products[item.key]!.inLanguage(labels.localeName)} · ${switch (item.value) {
-                FuelAvailability.available => labels.available,
-                FuelAvailability.low => labels.runningLow,
-                FuelAvailability.unavailable => labels.unavailable,
-              }}',
-              overflow: TextOverflow.ellipsis,
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(switch (item.value) {
+                    FuelAvailability.available => Icons.check_circle_outline,
+                    FuelAvailability.low => Icons.timelapse,
+                    FuelAvailability.unavailable => Icons.remove_circle_outline,
+                  }, size: 18),
+                  const SizedBox(width: 6),
+                  Flexible(
+                    child: Text(
+                      '${network.products[item.key]!.inLanguage(labels.localeName)} · ${switch (item.value) {
+                        FuelAvailability.available => labels.available,
+                        FuelAvailability.low => labels.runningLow,
+                        FuelAvailability.unavailable => labels.unavailable,
+                      }}',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
       ],

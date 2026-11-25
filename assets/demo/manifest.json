@@ -42,6 +42,16 @@
         "account": "assets/demo/standard/empty_account.json",
         "notifications": "assets/demo/standard/empty_notifications.json"
       }
+    },
+    "large_fleet": {
+      "files": {
+        "auth": "assets/demo/standard/auth.json",
+        "cards": "assets/demo/standard/large_cards.json",
+        "finance": "assets/demo/standard/large_finance.json",
+        "network": "assets/demo/standard/network.json",
+        "account": "assets/demo/standard/large_account.json",
+        "notifications": "assets/demo/standard/notifications.json"
+      }
     }
   }
 }
