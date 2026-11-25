@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:fleet_cards_demo/app/portal_app.dart';
 import 'package:fleet_cards_demo/app/portal_destinations.dart';
 import 'package:fleet_cards_demo/demo/demo_fixtures.dart';
@@ -168,86 +171,67 @@ void main() {
     expect(find.textContaining('ستجد رصيد كل بطاقة'), findsNothing);
   });
 
-  testWidgets('shows clean replies, scope messages and offline fallback', (
-    tester,
-  ) async {
-    final catalog = await tester.runAsync(
-      () => rootBundle.loadString(SupportRepository.assetPath),
-    );
-    final assets = FixtureAssets()
-      ..files[SupportRepository.assetPath] = catalog!;
-    var calls = 0;
-    await tester.pumpWidget(
-      MultiProvider(
-        providers: [
-          Provider(create: (_) => SupportRepository(FixtureLoader(assets))),
-          Provider<SupportGemini?>.value(
-            value: SupportGemini((_) async {
-              calls++;
-              if (calls == 5) return null;
-              if (calls == 4) {
-                return '{"status":"out_of_scope","text":"","sourceId":""}';
-              }
-              if (calls == 3) {
-                return '{"status":"no_answer","text":"","sourceId":""}';
-              }
-              if (calls == 2) {
-                return '{"status":"answer","text":"يُضاف الرصيد خلال 24 ساعة عمل.","sourceId":"guide-transfer-time"}';
-              }
-              return '{"status":"answer","text":"جواب تجريبي من Gemini","sourceId":"company-card"}';
-            }),
+  testWidgets(
+    'shows the provider reply directly and falls back only on failure',
+    (tester) async {
+      final catalog = await tester.runAsync(
+        () => rootBundle.loadString(SupportRepository.assetPath),
+      );
+      final assets = FixtureAssets()
+        ..files[SupportRepository.assetPath] = catalog!;
+      final firstReply = Completer<String>();
+      var calls = 0;
+      await tester.pumpWidget(
+        MultiProvider(
+          providers: [
+            Provider(create: (_) => SupportRepository(FixtureLoader(assets))),
+            Provider<SupportGemini?>.value(
+              value: SupportGemini((prompt) async {
+                calls++;
+                expect(jsonDecode(prompt)['firstTurn'], calls == 1);
+                if (calls == 1) return firstReply.future;
+                if (calls == 2) return 'جواب المساعد: https://example.invalid';
+                return null;
+              }),
+            ),
+          ],
+          child: const MaterialApp(
+            locale: Locale('ar'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Scaffold(body: SupportPage()),
           ),
-        ],
-        child: const MaterialApp(
-          locale: Locale('ar'),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: Scaffold(body: SupportPage()),
         ),
-      ),
-    );
-    await tester.pumpAndSettle();
-    await tester.tap(
-      find.widgetWithText(ActionChip, 'كيف بتشتغل بطاقة البوابة الذهبية؟'),
-    );
-    await tester.pump();
-    expect(find.text('عم ببحث عن جواب…'), findsOneWidget);
-    await tester.pumpAndSettle();
-    expect(find.text('جواب تجريبي من Gemini'), findsOneWidget);
-    expect(find.text('إجابة عبر Gemini'), findsNothing);
-    expect(find.text('المصدر: موقع البوابة الذهبية'), findsNothing);
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.widgetWithText(ActionChip, 'كيف بتشتغل بطاقة البوابة الذهبية؟'),
+      );
+      await tester.pump();
+      expect(find.text('عم ببحث عن جواب…'), findsOneWidget);
+      await tester.pump(const Duration(seconds: 9));
+      expect(find.text('عم ببحث عن جواب…'), findsOneWidget);
+      firstReply.complete('جواب تجريبي مباشر');
+      await tester.pumpAndSettle();
+      expect(find.text('جواب تجريبي مباشر'), findsOneWidget);
 
-    final composer = tester.widget<TextField>(find.byType(TextField));
-    composer.controller!.text = 'إذا بعت حوالة شام كاش إمتى بيظهر الرصيد؟';
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('إرسال السؤال'));
-    await tester.pumpAndSettle();
-    expect(find.text('يُضاف الرصيد خلال 24 ساعة عمل.'), findsOneWidget);
-    expect(find.textContaining('المصدر: دليل خدمة العملاء'), findsNothing);
+      final composer = tester.widget<TextField>(find.byType(TextField));
+      expect(composer.maxLength, isNull);
+      composer.controller!.text = 'احكيلي وصفة كيك';
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('إرسال السؤال'));
+      await tester.pumpAndSettle();
+      expect(
+        find.text('جواب المساعد: https://example.invalid'),
+        findsOneWidget,
+      );
 
-    composer.controller!.text = 'هل في محطة النور بتقبل بطاقة البوابة الذهبية؟';
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('إرسال السؤال'));
-    await tester.pumpAndSettle();
-    expect(find.text('ما عندي جواب مؤكد لهالسؤال.'), findsOneWidget);
-    expect(find.text('بحث محلي'), findsNothing);
-
-    composer.controller!.text = 'احكيلي وصفة كيك';
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('إرسال السؤال'));
-    await tester.pumpAndSettle();
-    expect(
-      find.textContaining('فيني ساعدك بأسئلة عن البوابة الذهبية'),
-      findsOneWidget,
-    );
-    expect(find.text('بحث محلي'), findsNothing);
-
-    composer.controller!.text = 'كيف بتشتغل بطاقة البوابة الذهبية؟';
-    await tester.pumpAndSettle();
-    await tester.tap(find.byTooltip('إرسال السؤال'));
-    await tester.pumpAndSettle();
-    expect(find.textContaining('هي بطاقة وقود مسبقة الدفع'), findsOneWidget);
-    expect(find.text('بحث محلي'), findsNothing);
-    expect(calls, 5);
-  });
+      composer.controller!.text = 'كيف بتشتغل بطاقة البوابة الذهبية؟';
+      await tester.pumpAndSettle();
+      await tester.tap(find.byTooltip('إرسال السؤال'));
+      await tester.pumpAndSettle();
+      expect(find.textContaining('هي بطاقة وقود مسبقة الدفع'), findsOneWidget);
+      expect(calls, 3);
+    },
+  );
 }

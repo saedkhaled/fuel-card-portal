@@ -4,7 +4,7 @@ Android baseline archived 25 November 2026 · [Closeout and verification record]
 
 ## Current state
 
-- 07 Golden Gate AI Assistant searches 61 bundled passages for offline answers. The configured Android app tries Gemini first and can give general guidance about Golden Gate, its services, the app, or the website. The assistant can introduce itself online and offline. The chat validates factual replies internally and omits provider and source labels. Release attestation and online catalog updates remain planned. [Offline design and evidence](step7_ai_support/package.md#offline-support-design) · [Gemini pilot](step7_ai_support/gemini-pilot.md)
+- 07 Golden Gate AI Assistant sends submitted chat questions to Gemini and shows the returned text directly. Gemini checks whether the question relates to Golden Gate or its app and can use bundled excerpts as optional context. The 61 bundled passages also support offline answers. Release attestation and online catalog updates remain planned. [Offline design and evidence](step7_ai_support/package.md#offline-support-design) · [Gemini pilot](step7_ai_support/gemini-pilot.md)
 
 - The Flutter redesign is applied and verified on Android 16 in English and Arabic. All 27 local tests and five Android integration tests passed. The branded APK and implementation evidence are recorded in the [Flutter handoff](step6_figma_redesign/flutter-handoff.md#flutter-implementation-evidence).
 - 06 Figma redesign and design handoff are complete. The user confirmed that the existing prototype examples are optional. The Flutter handoff records the Android implementation and accessibility checks. [Design and evidence](step6_figma_redesign/package.md#implementation-evidence)

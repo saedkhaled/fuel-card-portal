@@ -128,9 +128,6 @@ class SupportCatalog {
 
   final List<SupportEntry> entries;
 
-  SupportEntry? get assistantIdentity =>
-      entries.where((entry) => entry.id == assistantIdentityId).firstOrNull;
-
   SupportEntry? findAnswer(String question, {SupportEntry? previous}) {
     final query = _normalize(question);
     final exact = _index.where((passage) => passage.phrases.contains(query));

@@ -181,8 +181,6 @@
   "supportSend": "إرسال السؤال",
   "supportNoAnswer": "ما لقيت جواب لهالسؤال. جرّب صياغة تانية أو راجع الأسئلة الشائعة.",
   "supportSearching": "عم ببحث عن جواب…",
-  "supportGeminiNoAnswer": "ما عندي جواب مؤكد لهالسؤال.",
-  "supportGeminiOutOfScope": "فيني ساعدك بأسئلة عن البوابة الذهبية، بطاقات الوقود، المحطات أو استخدام التطبيق.",
   "supportFaq": "الأسئلة الشائعة",
   "supportLoadFailed": "تعذّر تحميل الأسئلة النموذجية.",
   "supportPreview": "جهة دعم تجريبية",

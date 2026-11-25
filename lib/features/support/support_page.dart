@@ -21,13 +21,7 @@ class _SupportPageState extends State<SupportPage> {
   final _composer = TextEditingController();
   final _scroll = ScrollController();
   final _turns =
-      <
-        ({
-          String question,
-          SupportEntry? entry,
-          SupportGeneratedReply? generated,
-        })
-      >[];
+      <({String question, SupportEntry? entry, String? generated})>[];
   late Future<SupportCatalog> _catalog;
   bool _searching = false;
 
@@ -44,10 +38,10 @@ class _SupportPageState extends State<SupportPage> {
     super.dispose();
   }
 
-  Future<void> _send(SupportCatalog catalog, String text) async {
+  Future<void> _send(SupportCatalog? catalog, String text) async {
     final question = text.trim();
     if (question.isEmpty || _searching) return;
-    final previous = _turns.lastOrNull?.entry;
+    final previous = _turns.lastOrNull;
     final gemini = context.read<SupportGemini?>();
     setState(() {
       _searching = true;
@@ -56,18 +50,27 @@ class _SupportPageState extends State<SupportPage> {
     _composer.clear();
     if (_scroll.hasClients) _scroll.jumpTo(0);
 
-    // Keep the search state visible even when the bundled index is fast.
-    await Future<void>.delayed(const Duration(milliseconds: 450));
-    if (!mounted) return;
+    if (gemini == null) {
+      // Keep the search state visible when the bundled index is fast.
+      await Future<void>.delayed(const Duration(milliseconds: 450));
+      if (!mounted) return;
+    }
     final generated = await gemini?.answer(
       catalog,
       question,
-      previous: previous,
+      firstTurn: previous == null,
+      previous: switch (previous) {
+        (question: final question, generated: final reply?, entry: _) => (
+          question: question,
+          reply: reply,
+        ),
+        _ => null,
+      },
     );
     if (!mounted) return;
     final entry = generated == null
-        ? catalog.findAnswer(question, previous: previous)
-        : generated.source;
+        ? catalog?.findAnswer(question, previous: previous?.entry)
+        : null;
     setState(() {
       _turns[_turns.length - 1] = (
         question: question,
@@ -94,14 +97,15 @@ class _SupportPageState extends State<SupportPage> {
 
   Widget _buildChat(BuildContext context) {
     final labels = AppLocalizations.of(context)!;
+    final hasGemini = context.watch<SupportGemini?>() != null;
     return FutureBuilder<SupportCatalog>(
       future: _catalog,
       builder: (context, snapshot) {
-        if (snapshot.connectionState != ConnectionState.done) {
+        if (!hasGemini && snapshot.connectionState != ConnectionState.done) {
           return const Center(child: CircularProgressIndicator());
         }
         final catalog = snapshot.data;
-        if (catalog == null) {
+        if (catalog == null && !hasGemini) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -163,10 +167,8 @@ class _SupportPageState extends State<SupportPage> {
                               : _textDirection(value.text),
                           decoration: InputDecoration(
                             labelText: labels.supportInputHint,
-                            counterText: '',
                           ),
                           textInputAction: TextInputAction.send,
-                          maxLength: 300,
                           onSubmitted: (text) => _send(catalog, text),
                         ),
                       ),
@@ -196,7 +198,7 @@ class _SupportPageState extends State<SupportPage> {
     );
   }
 
-  Widget _welcome(SupportCatalog catalog, AppLocalizations labels) => Padding(
+  Widget _welcome(SupportCatalog? catalog, AppLocalizations labels) => Padding(
     padding: const EdgeInsets.only(bottom: 12),
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,12 +209,12 @@ class _SupportPageState extends State<SupportPage> {
           spacing: 8,
           children: [
             for (final entry in {
-              ...catalog.entries
+              ...?catalog?.entries
                   .where(
                     (entry) => entry.sourceUrl != null && entry.example != null,
                   )
                   .take(2),
-              ...catalog.entries,
+              ...?catalog?.entries,
             }.where((entry) => entry.example != null).take(3))
               ActionChip(
                 label: Text(entry.example!, textDirection: TextDirection.rtl),
@@ -235,7 +237,7 @@ class _SupportTurn extends StatelessWidget {
 
   final String question;
   final SupportEntry? entry;
-  final SupportGeneratedReply? generated;
+  final String? generated;
   final bool searching;
 
   @override
@@ -244,14 +246,11 @@ class _SupportTurn extends StatelessWidget {
     final theme = Theme.of(context);
     final answer = entry;
     final reply = generated;
-    final response = answer?.id == SupportCatalog.assistantIdentityId
-        ? labels.assistantIntroduction
-        : switch (reply) {
-            null => answer?.passage ?? labels.supportNoAnswer,
-            (outOfScope: true, text: _, source: _) =>
-              labels.supportGeminiOutOfScope,
-            _ => reply.text ?? labels.supportGeminiNoAnswer,
-          };
+    final response =
+        reply ??
+        (answer?.id == SupportCatalog.assistantIdentityId
+            ? labels.assistantIntroduction
+            : answer?.passage ?? labels.supportNoAnswer);
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
@@ -294,7 +293,7 @@ class _SupportTurn extends StatelessWidget {
                             ),
                           ),
                         ),
-                        if (answer == null && reply?.text == null)
+                        if (answer == null && reply == null)
                           const _FaqLink()
                         else if (answer?.route case final route?
                             when route != PortalDestinations.support)

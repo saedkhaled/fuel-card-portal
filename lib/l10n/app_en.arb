@@ -223,8 +223,6 @@
   "supportSend": "Send question",
   "supportNoAnswer": "ما لقيت جواب لهالسؤال. جرّب صياغة تانية أو راجع الأسئلة الشائعة.",
   "supportSearching": "Searching for an answer…",
-  "supportGeminiNoAnswer": "I don’t have a confirmed answer to this question.",
-  "supportGeminiOutOfScope": "I can help with Golden Gate, fuel cards, stations, and using the app.",
   "supportFaq": "Frequently asked questions",
   "supportLoadFailed": "The sample Q&A could not load.",
   "supportPreview": "Demo support contact",

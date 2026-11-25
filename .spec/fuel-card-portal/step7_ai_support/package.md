@@ -30,7 +30,7 @@ See the [offline implementation and verification evidence](offline-implementatio
 
 ## Connected Support
 
-The [Gemini pilot plan](gemini-pilot.md) covers direct Android access through Firebase AI Logic and Arabic support grounded in the website, customer guide, and implemented app features. Gemini can offer practical help for related questions without a matching passage and declines unrelated requests. The chat shows the reply and keeps provenance internal. On-device search handles unavailable service or messages containing apparent sensitive data. Online catalog publishing is a separate follow-up.
+The [Gemini pilot plan](gemini-pilot.md) covers direct Android access through Firebase AI Logic. Gemini evaluates whether each submitted question relates to Golden Gate and can answer without a matching passage. The app displays the model’s reply directly. On-device search handles unavailable service. Online catalog publishing is a separate follow-up.
 
 ## Implementation and acceptance
 
