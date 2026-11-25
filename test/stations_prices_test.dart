@@ -141,6 +141,60 @@ void main() {
       expect(find.text('No price bulletins to show.'), findsOneWidget);
     },
   );
+  testWidgets('availability badges use the same colors in both views', (
+    tester,
+  ) async {
+    final fixture = await tester.runAsync(() => rootBundle.loadString(path));
+    final assets = FixtureAssets()..files[path] = fixture!;
+    final repo = NetworkRepository(FixtureLoader(assets), path);
+
+    for (final page in [
+      const Scaffold(body: StationsPage()),
+      const StationDetailsPage(stationId: 'dam-depot'),
+    ]) {
+      await tester.pumpWidget(
+        Provider.value(
+          value: repo,
+          child: MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: page,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      if (page is Scaffold) {
+        await tester.enterText(
+          find.byKey(const Key('station-search')),
+          'depot road',
+        );
+        await tester.pumpAndSettle();
+      }
+      for (final (label, background, foreground) in [
+        ('Diesel · Available', 0xffdff5e7, 0xff14633b),
+        ('Benzine · Running low', 0xffffefad, 0xff694a00),
+        ('Premium benzine · Not available', 0xffffe2e0, 0xff9b2226),
+      ]) {
+        final text = find.text(label);
+        expect(tester.widget<Text>(text).style?.color, Color(foreground));
+        expect(
+          find.ancestor(
+            of: text,
+            matching: find.byWidgetPredicate(
+              (widget) =>
+                  widget is DecoratedBox &&
+                  widget.decoration is BoxDecoration &&
+                  (widget.decoration as BoxDecoration).color ==
+                      Color(background),
+            ),
+          ),
+          findsOneWidget,
+        );
+      }
+    }
+  });
+
   testWidgets(
     'clearing filters lets a replacement search show a different station',
     (tester) async {

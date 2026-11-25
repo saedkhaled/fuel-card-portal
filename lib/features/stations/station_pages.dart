@@ -201,37 +201,67 @@ class _Availability extends StatelessWidget {
       spacing: 8,
       runSpacing: 4,
       children: [
-        for (final item in station.availability.entries)
-          DecoratedBox(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHigh,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(switch (item.value) {
-                    FuelAvailability.available => Icons.check_circle_outline,
-                    FuelAvailability.low => Icons.timelapse,
-                    FuelAvailability.unavailable => Icons.remove_circle_outline,
-                  }, size: 18),
-                  const SizedBox(width: 6),
-                  Flexible(
-                    child: Text(
-                      '${network.products[item.key]!.inLanguage(labels.localeName)} · ${switch (item.value) {
-                        FuelAvailability.available => labels.available,
-                        FuelAvailability.low => labels.runningLow,
-                        FuelAvailability.unavailable => labels.unavailable,
-                      }}',
-                    ),
-                  ),
-                ],
-              ),
-            ),
+        for (final MapEntry(key: product, value: status)
+            in station.availability.entries)
+          _AvailabilityBadge(
+            product: network.products[product]!.inLanguage(labels.localeName),
+            status: status,
           ),
       ],
+    );
+  }
+}
+
+class _AvailabilityBadge extends StatelessWidget {
+  const _AvailabilityBadge({required this.product, required this.status});
+
+  final String product;
+  final FuelAvailability status;
+
+  @override
+  Widget build(BuildContext context) {
+    final labels = AppLocalizations.of(context)!;
+    final (label, icon, background, foreground) = switch (status) {
+      FuelAvailability.available => (
+        labels.available,
+        Icons.check_circle_outline,
+        const Color(0xffdff5e7),
+        const Color(0xff14633b),
+      ),
+      FuelAvailability.low => (
+        labels.runningLow,
+        Icons.timelapse,
+        const Color(0xffffefad),
+        const Color(0xff694a00),
+      ),
+      FuelAvailability.unavailable => (
+        labels.unavailable,
+        Icons.remove_circle_outline,
+        const Color(0xffffe2e0),
+        const Color(0xff9b2226),
+      ),
+    };
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: background,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: foreground, size: 18),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                '$product · $label',
+                style: TextStyle(color: foreground),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

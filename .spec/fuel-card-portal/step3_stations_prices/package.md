@@ -27,3 +27,10 @@ Own station and prices features and scoped tests. Read R11–R13 from [reference
 ## Exit
 
 Station and bulletin journeys work in airplane mode from real tabs/shortcuts. Publish route hooks and test evidence.
+
+## Fuel availability color follow-up
+
+- On `codex/fuel-card-portal` at `7aea3d0`, updated the shared availability badge for R11 and R12. Available is green, low stock is yellow, and unavailable is red. Both screens retain the per-fuel label and status icon. The fixture and filter behavior are unchanged.
+- `flutter analyze --no-pub` and all 34 `flutter test --no-pub` tests passed. The added widget check verifies the three foreground and background pairs in the station list and station details. Their text contrast ratios are 6.38:1, 7.05:1, and 6.49:1.
+- Built with `flutter build apk --release --target-platform android-arm64`. The branded release-mode APK is `/tmp/fleet-station-colors.ARh1ll/fleet-cards-golden-gate-station-colors-arm64.apk`, SHA-256 `57224ea9fa668d6aee073c0ca5e4a8de9cd494d834a23a8893309799bf0110d2`.
+- Installed with `adb -s emulator-5554 install -r` on Android 16/API 36. Verified all three color, icon, and label combinations on the Arabic station list and South Depot details.
