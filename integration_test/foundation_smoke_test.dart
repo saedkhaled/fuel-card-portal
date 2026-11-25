@@ -30,10 +30,14 @@ void main() {
     await tester.tap(find.text('Not now'));
     await tester.pumpAndSettle();
     expect(find.text('Fleet overview'), findsOneWidget);
-    await tester.tap(find.byIcon(Icons.credit_card_outlined));
+    await tester.tap(
+      find.widgetWithIcon(NavigationDestination, Icons.credit_card_outlined),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Search card number or plate'), findsOneWidget);
-    await tester.tap(find.byIcon(Icons.dashboard_outlined));
+    await tester.tap(
+      find.widgetWithIcon(NavigationDestination, Icons.dashboard_outlined),
+    );
     await tester.pumpAndSettle();
     expect(find.text('Fleet overview'), findsOneWidget);
   });

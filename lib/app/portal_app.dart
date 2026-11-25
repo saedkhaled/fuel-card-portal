@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../demo/demo_fixtures.dart';
+import '../features/account/account_data.dart';
+import '../features/notifications/inbox_controller.dart';
 import '../features/auth/session_controller.dart';
 import '../features/auth/session_repository.dart';
 import '../features/cards/card_notes.dart';
@@ -40,9 +42,11 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
   Future<_Startup> _load() async {
     final DemoFixtures fixtures;
     final FleetData fleet;
+    final AccountData account;
     try {
       fixtures = await widget.loader.load(scenario: widget.scenario);
       fleet = await FleetData.load(widget.loader, fixtures);
+      account = await AccountData.load(widget.loader, fixtures, fleet);
     } on FixtureException catch (error) {
       debugPrint(error.toString());
       rethrow;
@@ -56,6 +60,7 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
     return _Startup(
       fixtures: fixtures,
       fleet: fleet,
+      account: account,
       repository: repository,
       accountId: await repository.restore(),
       language: await preferences.read(PortalSettings.languageKey),
@@ -70,8 +75,8 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
       if (startup != null) {
         return _PortalApp(
           startup: startup,
-          loader: widget.loader,
           preferences: widget.preferences,
+          loader: widget.loader,
           now: widget.now,
           initialLocation: widget.initialLocation,
         );
@@ -119,6 +124,7 @@ class _Startup {
   const _Startup({
     required this.fixtures,
     required this.fleet,
+    required this.account,
     required this.repository,
     required this.accountId,
     required this.language,
@@ -126,6 +132,7 @@ class _Startup {
 
   final DemoFixtures fixtures;
   final FleetData fleet;
+  final AccountData account;
   final SessionRepository repository;
   final String? accountId;
   final String? language;
@@ -154,6 +161,7 @@ class _PortalAppState extends State<_PortalApp> {
   late final SessionController _session;
   late final PortalSettings _settings;
   late final CardNotes _notes;
+  late final InboxController _inbox;
   late final GoRouter _router;
 
   @override
@@ -162,11 +170,13 @@ class _PortalAppState extends State<_PortalApp> {
     final startup = widget.startup;
     _session = SessionController(startup.repository, startup.accountId);
     _notes = CardNotes(widget.preferences, startup.fixtures.scenario);
-    _settings = PortalSettings(
+    _inbox = InboxController(
+      startup.account,
       widget.preferences,
       startup.fixtures.scenario,
-      language: startup.language,
+      _session,
     );
+    _settings = PortalSettings(widget.preferences, language: startup.language);
     _router = createPortalRouter(
       _session,
       widget.now,
@@ -177,6 +187,7 @@ class _PortalAppState extends State<_PortalApp> {
   @override
   void dispose() {
     _router.dispose();
+    _inbox.dispose();
     _session.dispose();
     _settings.dispose();
     _notes.dispose();
@@ -188,6 +199,8 @@ class _PortalAppState extends State<_PortalApp> {
     providers: [
       Provider.value(value: widget.startup.fixtures),
       Provider.value(value: widget.startup.fleet),
+      Provider.value(value: widget.startup.account),
+      ChangeNotifierProvider.value(value: _inbox),
       Provider(
         create: (_) => NetworkRepository(
           widget.loader,

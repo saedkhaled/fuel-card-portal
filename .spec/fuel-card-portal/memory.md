@@ -4,12 +4,14 @@ Updated 25 November 2026
 
 ## Current state
 
+- 04 Account services completed. Account and inbox fixtures, subscriptions, offline QR top-up, FAQ, alerts and sign-out passed local and Android 16 checks. The ARM64 debug APK is in `build/account-services/`.
+
 - 03 Stations and prices completed. The bundled network fixture, station filters, offline directions, and bulletin history passed Arabic/English Android offline checks. The ARM64 debug APK is in `build/stations-prices/`.
 
 - 02 Cards and finance completed. JSON-backed Home, cards and notes, balances, operations, sales, and CSV/XLSX passed Android 16 offline checks. The ARM64 debug APK is in `build/cards-finance/`.
 
 - 01 Foundation completed on the checkout of `main` from `a6a2352`. Offline JSON sign-in, Arabic/English locale selection, guarded shell, and session persistence were verified on Android 16/API 36. A debug-signed ARM64 APK is available in `build/foundation/`.
-- Reference sign-in, authenticated navigation and logout were exercised on Pixel 9 Pro Android 16. The delivered JSON loader supports the standard and recoverable auth scenarios. Card and finance fixtures are implemented. Network and account fixtures remain in packages 03 and 04.
+- Reference sign-in, authenticated navigation and logout were exercised on Pixel 9 Pro Android 16. The delivered JSON loader supports the standard and recoverable auth scenarios. Card and finance fixtures are implemented. Network and account fixtures are implemented.
 - The working directory had an empty Git repository at planning intake. Capture the current branch and `git status --short` at implementation time. Use `HEAD` only if a commit exists.
 - Mobile monorepo planning layout informed these documents. This is a standalone project.
 
@@ -20,8 +22,8 @@ Updated 25 November 2026
 | [01 Foundation](step1_foundation/package.md) | Complete | [Foundation evidence](step1_foundation/package.md#evidence) |
 | [02 Cards and finance](step2_cards_finance/package.md) | Complete | [Cards and finance evidence](step2_cards_finance/package.md#evidence-and-downstream-contract) |
 | [03 Stations and prices](step3_stations_prices/package.md) | Complete | [Stations and prices evidence](step3_stations_prices/package.md#evidence-and-downstream-contract) |
-| [04 Account services](step4_account_services/package.md) | Ready | Pending |
-| [05 Android acceptance](step5_android_acceptance/package.md) | Awaiting 03–04 | Pending |
+| [04 Account services](step4_account_services/package.md) | Complete | [Account services evidence](step4_account_services/package.md#evidence-and-downstream-contract) |
+| [05 Android acceptance](step5_android_acceptance/package.md) | Ready | Pending |
 
 ## Decisions and anchors
 
@@ -34,5 +36,5 @@ Updated 25 November 2026
 ## Next chat command
 
 ```text
-/spec-apply fuel-card-portal step4_account_services
+/spec-apply fuel-card-portal step5_android_acceptance
 ```

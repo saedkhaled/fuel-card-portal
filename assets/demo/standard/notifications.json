@@ -1,0 +1,50 @@
+{
+  "inboxes": [
+    {
+      "accountId": "demo-fleet",
+      "items": [
+        {
+          "id": "new-demo-bulletin",
+          "at": "2026-11-24T10:00:00Z",
+          "read": false,
+          "title": {
+            "en": "Fuel prices updated",
+            "ar": "تم تحديث أسعار الوقود"
+          },
+          "body": {
+            "en": "Open the current price bulletin for the demo prices per liter.",
+            "ar": "افتح نشرة الأسعار الحالية للاطلاع على الأسعار التجريبية لكل لتر."
+          },
+          "bulletinId": "prices-2026-11-24"
+        },
+        {
+          "id": "welcome-demo",
+          "at": "2026-11-23T10:00:00Z",
+          "read": true,
+          "title": {
+            "en": "Welcome to Fleet Cards",
+            "ar": "أهلاً بك في بطاقات الأسطول"
+          },
+          "body": {
+            "en": "Your fleet activity is available in the offline demo.",
+            "ar": "يمكنك مراجعة نشاط أسطولك في النسخة التجريبية دون اتصال."
+          }
+        }
+      ],
+      "stationAlert": {
+        "id": "station-alert-depot",
+        "at": "2026-11-25T11:00:00Z",
+        "read": false,
+        "title": {
+          "en": "Diesel available at South Depot",
+          "ar": "المازوت متوفر في محطة المستودع الجنوبي"
+        },
+        "body": {
+          "en": "A simulated station fuel availability update.",
+          "ar": "تحديث تجريبي عن توفر الوقود في المحطة."
+        },
+        "stationId": "dam-depot"
+      }
+    }
+  ]
+}

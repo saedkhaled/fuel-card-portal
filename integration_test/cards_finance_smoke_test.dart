@@ -66,6 +66,11 @@ void main() {
 
       await tap(find.byIcon(Icons.account_balance_wallet_outlined));
       expect(find.text('Total balance'), findsOneWidget);
+      await tap(find.byTooltip('Export'));
+      expect(find.text('CSV'), findsOneWidget);
+      expect(find.text('XLSX'), findsOneWidget);
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
       await tap(find.text('Operations log').first);
       expect(find.textContaining('FC-0101'), findsOneWidget);
       expect(find.text('Deposit'), findsOneWidget);
@@ -75,6 +80,7 @@ void main() {
       await tester.pumpAndSettle();
 
       await tap(find.byIcon(Icons.menu));
+      await tester.scrollUntilVisible(find.text('Sales'), 180);
       await tap(find.text('Sales'));
       expect(find.textContaining('RC-3104'), findsOneWidget);
       await tap(find.text('Filter'));
@@ -82,6 +88,27 @@ void main() {
       await tap(find.text('Apply filters'));
       expect(find.textContaining('RC-3104'), findsOneWidget);
       expect(find.textContaining('RC-3091'), findsNothing);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      await tap(
+        find.widgetWithIcon(NavigationDestination, Icons.dashboard_outlined),
+      );
+      final salesShortcut = find.text('Sales');
+      await tester.scrollUntilVisible(salesShortcut, 145);
+      await tap(salesShortcut);
+      expect(find.textContaining('RC-3104'), findsOneWidget);
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+      await tap(
+        find.widgetWithIcon(NavigationDestination, Icons.credit_card_outlined),
+      );
+      await tap(find.widgetWithText(ChoiceChip, 'Stopped'));
+      await tester.enterText(search, 'HMS 4902');
+      await tester.pumpAndSettle();
+      FocusManager.instance.primaryFocus?.unfocus();
+      await tester.pumpAndSettle();
+      expect(find.textContaining('FC-0103'), findsOneWidget);
+      expect(find.text('This card has no activation date.'), findsOneWidget);
     },
   );
 }

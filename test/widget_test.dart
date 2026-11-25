@@ -69,6 +69,7 @@ void main() {
     expect(find.text('Search card number or plate'), findsOneWidget);
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
+    await tester.scrollUntilVisible(find.text('Sign out'), 180);
     await tester.tap(find.text('Sign out'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Cancel'));

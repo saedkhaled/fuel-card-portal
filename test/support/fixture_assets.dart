@@ -7,12 +7,31 @@ class FixtureAssets extends CachingAssetBundle {
   final files = <String, String>{
     FixtureLoader.manifestPath: '''
       {"schemaVersion":1,"defaultScenario":"standard","scenarios":{
-        "standard":{"files":{"auth":"assets/demo/standard/auth.json","cards":"assets/demo/standard/cards.json","finance":"assets/demo/standard/finance.json"}}
+        "standard":{"files":{
+          "auth":"assets/demo/standard/auth.json","cards":"assets/demo/standard/cards.json",
+          "finance":"assets/demo/standard/finance.json","account":"assets/demo/standard/account.json",
+          "notifications":"assets/demo/standard/notifications.json"
+        }}
       }}
       ''',
     'assets/demo/standard/cards.json': '{"cards":[]}',
     'assets/demo/standard/finance.json':
         '{"currency":"SYP","minorDigits":2,"clockAnchor":"2026-11-25T12:00:00Z","balances":[],"operations":[],"sales":[],"stations":[]}',
+    'assets/demo/standard/account.json': '''
+      {"profiles":[{
+        "accountId":"fleet",
+        "company":{"en":"Test Fleet","ar":"أسطول تجريبي"},
+        "city":{"en":"Damascus","ar":"دمشق"},
+        "registration":"DEMO-TEST",
+        "contact":{"name":{"en":"Help desk","ar":"الدعم"},"phone":"0900000000","email":"test@example.invalid"},
+        "subscription":{"monthlyAmountMinor":450000,"nextChargeOn":"2026-12-01","cards":[]},
+        "topUp":{"destination":"DEMO-TEST","qrPayload":"FLEET-CARDS-DEMO:TEST",
+          "instructions":{"en":"Sample QR","ar":"رمز تجريبي"},"transferNoteTemplate":"DEMO {card} {plate}"},
+        "faq":[]
+      }]}
+      ''',
+    'assets/demo/standard/notifications.json':
+        '{"inboxes":[{"accountId":"fleet","items":[],"stationAlert":null}]}',
     authPath: '''
       {"validitySeconds":300,"resendSeconds":60,"accounts":[
         {"id":"fleet","phone":"0900000000","code":"246810"}

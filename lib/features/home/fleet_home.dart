@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../app/portal_destinations.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../finance/finance_models.dart';
 import '../finance/finance_scope.dart';
 import '../finance/finance_widgets.dart';
+import '../notifications/inbox_controller.dart';
 
 class FleetHome extends StatelessWidget {
   const FleetHome({super.key});
@@ -42,7 +44,7 @@ class FleetHome extends StatelessWidget {
               (labels.refill, counts[OperationType.refill] ?? 0),
               (labels.deposit, counts[OperationType.deposit] ?? 0),
               (labels.withdraw, counts[OperationType.withdraw] ?? 0),
-              (labels.unread, 0),
+              (labels.unread, context.watch<InboxController>().unread),
             ])
               Chip(label: Text('$label · $count')),
           ],

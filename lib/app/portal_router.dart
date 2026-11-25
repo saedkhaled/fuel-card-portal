@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/account/account_pages.dart';
+import '../features/account/top_up_page.dart';
 import '../features/auth/auth_pages.dart';
 import '../features/auth/session_controller.dart';
 import '../features/cards/cards_pages.dart';
 import '../features/finance/finance_pages.dart';
-import '../features/finance/finance_widgets.dart';
 import '../features/prices/price_pages.dart';
+import '../features/notifications/notification_pages.dart';
 import '../features/stations/station_pages.dart';
-import '../l10n/generated/app_localizations.dart';
 import 'portal_destinations.dart';
 import 'portal_shell.dart';
 
@@ -80,13 +80,32 @@ GoRouter createPortalRouter(
       ),
       GoRoute(
         path: PortalDestinations.notifications,
-        builder: (context, _) {
-          final labels = AppLocalizations.of(context)!;
-          return Scaffold(
-            appBar: AppBar(title: Text(labels.notifications)),
-            body: EmptyFinance(labels.noNotifications),
-          );
-        },
+        builder: (_, _) => const NotificationsPage(),
+      ),
+      GoRoute(
+        path: PortalDestinations.notificationSettings,
+        builder: (_, _) => const NotificationSettingsPage(),
+      ),
+      GoRoute(
+        path: PortalDestinations.subscriptions,
+        builder: (_, _) => const SubscriptionsPage(),
+      ),
+      GoRoute(
+        path: '${PortalDestinations.subscriptions}/:cardId',
+        builder: (_, state) =>
+            InvoicesPage(cardId: state.pathParameters['cardId']!),
+      ),
+      GoRoute(
+        path: PortalDestinations.topUp,
+        builder: (_, _) => const TopUpPage(),
+      ),
+      GoRoute(
+        path: PortalDestinations.information,
+        builder: (_, _) => const InformationPage(),
+      ),
+      GoRoute(
+        path: PortalDestinations.about,
+        builder: (_, _) => const AboutPage(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, navigation) => PortalShell(navigation: navigation),
@@ -98,7 +117,7 @@ GoRouter createPortalRouter(
                   path: tab.path,
                   builder: (_, _) => switch (tab) {
                     PortalTab.home => const FoundationHome(),
-                    PortalTab.more => const FoundationMore(),
+                    PortalTab.more => const AccountPage(),
                     PortalTab.cards => const CardsPage(),
                     PortalTab.balances => const BalancesPage(),
                     PortalTab.stations => const StationsPage(),

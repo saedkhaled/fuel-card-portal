@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../features/auth/session_controller.dart';
+import '../features/account/account_pages.dart';
+import '../features/notifications/inbox_controller.dart';
 import '../features/home/fleet_home.dart';
 import '../l10n/generated/app_localizations.dart';
-import 'language_picker.dart';
-import 'portal_settings.dart';
 import 'portal_destinations.dart';
 
 enum PortalTab {
@@ -74,21 +73,11 @@ class FoundationHome extends StatefulWidget {
 }
 
 class _FoundationHomeState extends State<FoundationHome> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) _showAlertPrompt();
-    });
-  }
+  bool _promptScheduled = false;
 
-  Future<void> _showAlertPrompt() async {
-    final settings = context.read<PortalSettings>();
-    final id = context.read<SessionController>().accountId;
-    if (id == null) return;
+  Future<void> _showAlertPrompt(InboxController inbox) async {
+    if (!mounted || !inbox.needsPrompt) return;
     try {
-      final needsPrompt = await settings.needsAlertPrompt(id);
-      if (!mounted || !needsPrompt) return;
       final l10n = AppLocalizations.of(context)!;
       final enabled = await showDialog<bool>(
         context: context,
@@ -108,94 +97,23 @@ class _FoundationHomeState extends State<FoundationHome> {
           ],
         ),
       );
-      if (enabled != null) {
-        await settings.recordAlertChoice(id, enabled: enabled);
-      }
+      if (mounted) await inbox.setAlerts(enabled ?? false);
     } catch (_) {
-      if (mounted) showOperationError(context);
+      if (mounted) {
+        accountMessage(context, AppLocalizations.of(context)!.operationFailed);
+      }
     }
   }
 
   @override
-  Widget build(BuildContext context) => const FleetHome();
-}
-
-class FoundationMore extends StatelessWidget {
-  const FoundationMore({super.key});
-
-  Future<void> _signOut(BuildContext context) async {
-    final session = context.read<SessionController>();
-    final l10n = AppLocalizations.of(context)!;
-    final accepted = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.logoutQuestion),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: Text(l10n.logout),
-          ),
-        ],
-      ),
-    );
-    if (accepted != true || !context.mounted) return;
-    await session.logout();
-    if (context.mounted && session.issue != null) showOperationError(context);
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final session = context.watch<SessionController>();
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        ListTile(
-          leading: const Icon(Icons.language),
-          title: Text(l10n.language),
-          onTap: () => choosePortalLanguage(context),
-        ),
-        ListTile(
-          leading: const Icon(Icons.receipt_long_outlined),
-          title: Text(l10n.sales),
-          onTap: () => context.push(PortalDestinations.sales),
-        ),
-        ListTile(
-          leading: const Icon(Icons.price_change_outlined),
-          title: Text(l10n.priceBulletins),
-          onTap: () => context.push(PortalDestinations.prices),
-        ),
-        ListTile(
-          leading: const Icon(Icons.logout),
-          title: Text(l10n.logout),
-          enabled: !session.busy,
-          onTap: () => _signOut(context),
-        ),
-      ],
-    );
+    final inbox = context.watch<InboxController>();
+    if (inbox.needsPrompt && !_promptScheduled) {
+      _promptScheduled = true;
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => _showAlertPrompt(inbox),
+      );
+    }
+    return const FleetHome();
   }
-}
-
-class PendingTab extends StatelessWidget {
-  const PendingTab({super.key, required this.tab});
-
-  final PortalTab tab;
-
-  @override
-  Widget build(BuildContext context) => Center(
-    child: ListTile(
-      leading: Icon(tab.icon),
-      title: Text(AppLocalizations.of(context)!.sectionPending),
-    ),
-  );
-}
-
-void showOperationError(BuildContext context) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(content: Text(AppLocalizations.of(context)!.operationFailed)),
-  );
 }

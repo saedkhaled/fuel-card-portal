@@ -1,0 +1,70 @@
+{
+  "profiles": [
+    {
+      "accountId": "demo-fleet",
+      "company": {
+        "en": "Cedar Fleet Logistics",
+        "ar": "أرز لخدمات الأسطول"
+      },
+      "city": {
+        "en": "Damascus",
+        "ar": "دمشق"
+      },
+      "registration": "DEMO-REG-104",
+      "contact": {
+        "name": {
+          "en": "Fleet Service Desk",
+          "ar": "مكتب خدمات الأسطول"
+        },
+        "phone": "0900000000",
+        "email": "fleet@example.invalid"
+      },
+      "subscription": {
+        "monthlyAmountMinor": 450000,
+        "nextChargeOn": "2026-12-01",
+        "cards": []
+      },
+      "topUp": {
+        "destination": "DEMO-TRANSFER-104",
+        "qrPayload": "FLEET-CARDS-DEMO:TRANSFER-104",
+        "instructions": {
+          "en": "Review the demo destination, select a fuel card and copy its transfer note. The QR contains sample text for offline testing.",
+          "ar": "راجع وجهة التحويل التجريبية، ثم اختر بطاقة وقود وانسخ ملاحظتها. يحتوي الرمز على نص تجريبي للاختبار دون اتصال."
+        },
+        "transferNoteTemplate": "DEMO TOP-UP | {card} | {plate}"
+      },
+      "faq": [
+        {
+          "question": {
+            "en": "Where can I review card activity?",
+            "ar": "أين يمكنني مراجعة حركات البطاقة؟"
+          },
+          "answer": {
+            "en": "Open a fuel card and select Operations log to review transactions and export a report.",
+            "ar": "افتح بطاقة الوقود واختر سجل الحركات لمراجعة العمليات وتصدير التقرير."
+          }
+        },
+        {
+          "question": {
+            "en": "When is the monthly subscription charged?",
+            "ar": "متى تُخصم رسوم الاشتراك الشهري؟"
+          },
+          "answer": {
+            "en": "The subscription screen shows the scheduled date and invoice history for each card.",
+            "ar": "تعرض شاشة الاشتراك التاريخ المحدد وسجل الفواتير لكل بطاقة."
+          }
+        },
+        {
+          "question": {
+            "en": "How do station alerts work?",
+            "ar": "كيف تعمل تنبيهات المحطات؟"
+          },
+          "answer": {
+            "en": "Turn on station alerts in the demo to receive a sample fuel availability update in your inbox.",
+            "ar": "فعّل تنبيهات المحطات لتتلقى تحديثاً تجريبياً عن توفر الوقود في صندوق الإشعارات."
+          }
+        }
+      ]
+    }
+  ]
+}

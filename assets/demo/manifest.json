@@ -7,7 +7,9 @@
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/cards.json",
         "finance": "assets/demo/standard/finance.json",
-        "network": "assets/demo/standard/network.json"
+        "network": "assets/demo/standard/network.json",
+        "account": "assets/demo/standard/account.json",
+        "notifications": "assets/demo/standard/notifications.json"
       }
     },
     "recoverable_error": {
@@ -15,7 +17,9 @@
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/cards.json",
         "finance": "assets/demo/standard/finance.json",
-        "network": "assets/demo/standard/network.json"
+        "network": "assets/demo/standard/network.json",
+        "account": "assets/demo/standard/account.json",
+        "notifications": "assets/demo/standard/notifications.json"
       },
       "failOnce": "requestCode"
     },
@@ -24,7 +28,9 @@
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/cards.json",
         "finance": "assets/demo/standard/quiet_finance.json",
-        "network": "assets/demo/standard/network.json"
+        "network": "assets/demo/standard/network.json",
+        "account": "assets/demo/standard/account.json",
+        "notifications": "assets/demo/standard/empty_notifications.json"
       }
     },
     "empty": {
@@ -32,7 +38,9 @@
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/empty_cards.json",
         "finance": "assets/demo/standard/empty_finance.json",
-        "network": "assets/demo/standard/empty_network.json"
+        "network": "assets/demo/standard/empty_network.json",
+        "account": "assets/demo/standard/empty_account.json",
+        "notifications": "assets/demo/standard/empty_notifications.json"
       }
     }
   }

@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:excel/excel.dart';
-import 'package:flutter/services.dart';
+import 'dart:typed_data';
+
+import '../../app/android_file_actions.dart';
 
 enum FinanceExportFormat {
   csv('text/csv'),
@@ -64,17 +66,14 @@ class FinanceExport {
 class AndroidFinanceExport {
   const AndroidFinanceExport();
 
-  static const channel = MethodChannel('com.example.fleet_cards_demo/exports');
-
   Future<bool> send(
     FinanceExport table,
     FinanceExportFormat format, {
     required bool share,
-  }) async =>
-      await channel.invokeMethod<bool>(share ? 'share' : 'save', {
-        'name': '${table.name}.${format.name}',
-        'mime': format.mime,
-        'bytes': table.encode(format),
-      }) ??
-      false;
+  }) => const AndroidFileActions().send(
+    name: '${table.name}.${format.name}',
+    mime: format.mime,
+    bytes: table.encode(format),
+    share: share,
+  );
 }

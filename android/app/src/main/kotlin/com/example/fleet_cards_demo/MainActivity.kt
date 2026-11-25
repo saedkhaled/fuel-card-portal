@@ -19,6 +19,10 @@ class MainActivity : FlutterActivity() {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.fleet_cards_demo/exports")
             .setMethodCallHandler { call, result ->
+                if (call.method == "appVersion") {
+                    result.success(packageManager.getPackageInfo(packageName, 0).versionName)
+                    return@setMethodCallHandler
+                }
                 if (call.method != "save" && call.method != "share") {
                     result.notImplemented()
                     return@setMethodCallHandler
