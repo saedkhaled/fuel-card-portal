@@ -12,6 +12,7 @@ class SupportEntry {
     required this.subject,
     required this.route,
     required this.sourceUrl,
+    this.publicPassage,
   });
 
   final String id;
@@ -23,11 +24,16 @@ class SupportEntry {
   final String? subject;
   final String? route;
   final Uri? sourceUrl;
+  final String? publicPassage;
+
+  String get onlinePassage => publicPassage ?? passage;
 
   Iterable<String> get phrases => [title, ?example, ...terms];
 }
 
 class SupportCatalog {
+  static const assistantIdentityId = 'assistant-identity';
+
   SupportCatalog._(this.entries) {
     _index = [for (final entry in entries) _IndexedPassage(entry)];
     for (final passage in _index) {
@@ -42,6 +48,8 @@ class SupportCatalog {
 
   factory SupportCatalog.fromJson(Map<String, dynamic> data) {
     const allowedRoutes = {
+      PortalDestinations.cards,
+      PortalDestinations.support,
       PortalDestinations.balances,
       PortalDestinations.topUp,
       PortalDestinations.stations,
@@ -70,6 +78,7 @@ class SupportCatalog {
                 ) &&
                 ids.add(id)) {
           final guideSection = row['guide_section'];
+          final publicPassage = row['public_passage_ar'];
           final example = row['example_ar'];
           final subject = row['subject'];
           final route = row['app_route'];
@@ -77,6 +86,8 @@ class SupportCatalog {
           final sourceUrl = source is String ? Uri.tryParse(source) : null;
           if ((route == null && source == null && guideSection == null) ||
               !_validOptionalText(guideSection) ||
+              !_validOptionalText(publicPassage) ||
+              (publicPassage != null && !_isOfficialSource(sourceUrl)) ||
               !_validOptionalText(example) ||
               !_validOptionalText(subject) ||
               (route != null && !allowedRoutes.contains(route)) ||
@@ -97,6 +108,7 @@ class SupportCatalog {
               subject: subject as String?,
               route: route as String?,
               sourceUrl: sourceUrl,
+              publicPassage: publicPassage as String?,
             ),
           );
         } else {
@@ -115,6 +127,9 @@ class SupportCatalog {
   }
 
   final List<SupportEntry> entries;
+
+  SupportEntry? get assistantIdentity =>
+      entries.where((entry) => entry.id == assistantIdentityId).firstOrNull;
 
   SupportEntry? findAnswer(String question, {SupportEntry? previous}) {
     final query = _normalize(question);
@@ -152,6 +167,47 @@ class SupportCatalog {
     return _rank(_index, words);
   }
 
+  List<SupportEntry> onlineSourcesFor(
+    String question, {
+    SupportEntry? previous,
+  }) {
+    final query = _normalize(question);
+    final words = _tokens(query);
+    if (words.isEmpty) return const [];
+    final matches = <({SupportEntry entry, double score})>[];
+    for (final passage in _index) {
+      if (passage.entry.id == assistantIdentityId) continue;
+      final onlinePassage = passage.entry.onlinePassage;
+      final shared = words.intersection(passage.heading);
+      final exact = passage.phrases.contains(query);
+      final sameSubject =
+          previous?.subject != null &&
+          previous!.subject == passage.entry.subject;
+      final contextual =
+          sameSubject &&
+          _followUpMarkers.any((marker) => query.split(' ').contains(marker));
+      if (!exact && shared.isEmpty && !contextual) continue;
+      final score =
+          _headingScore(passage, shared) +
+          words
+                  .intersection(_tokens(_normalize(onlinePassage)))
+                  .difference(shared)
+                  .length *
+              .65 +
+          (exact ? 10 : 0) +
+          (sameSubject ? 2 : 0);
+      matches.add((entry: passage.entry, score: score));
+    }
+    matches.sort((a, b) => b.score.compareTo(a.score));
+    return matches.take(4).map((match) => match.entry).toList(growable: false);
+  }
+
+  double _headingScore(_IndexedPassage passage, Set<String> words) =>
+      words.fold<double>(0, (total, term) {
+        final weight = 2 + 3 / _frequency[term]!;
+        return total + weight + (passage.title.contains(term) ? 1 : 0);
+      });
+
   SupportEntry? _rank(
     Iterable<_IndexedPassage> passages,
     Set<String> words, {
@@ -170,12 +226,7 @@ class SupportCatalog {
         continue;
       }
 
-      final score =
-          strong.fold<double>(0, (total, term) {
-            final weight = 2 + 3 / _frequency[term]!;
-            return total + weight + (passage.title.contains(term) ? 1 : 0);
-          }) +
-          weak.length * .65;
+      final score = _headingScore(passage, strong) + weak.length * .65;
       matches.add((entry: passage.entry, score: score));
     }
     matches.sort((a, b) => b.score.compareTo(a.score));
@@ -225,6 +276,10 @@ const _followUpMarkers = {
   'عندن',
   'هناك',
   'كمان',
+  'استخدمها',
+  'استعملها',
+  'بستخدمها',
+  'بستعملها',
 };
 
 final _stopWords = _normalize(
@@ -257,6 +312,7 @@ const _wordGroups = [
   'توفر توافر متوفر موجود متاح متوفره',
   'رقم تلفون هاتف موبايل phone',
   'شامكاش shamcash',
+  'استخدام استخدم استخدمها استعملها بستخدمها بستعملها use',
 ];
 
 final _synonyms = {

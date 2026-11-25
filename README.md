@@ -21,6 +21,10 @@ The demo includes sign-in, session restoration, Home, Cards, fuel-card notes, Ba
 - [Android acceptance checks](.spec/fuel-card-portal/verification.md)
 - [Implementation rules](AGENTS.md) and [execution handoff](.spec/fuel-card-portal/prompt.md)
 
+## Run Golden Gate AI Assistant
+
+Run `flutter run` on Android or start debugging from VS Code. The build includes the no-cost prototype’s Firebase client configuration. The demo sign-in uses `0900000000` and `246810`. New debug installations need a one-time App Check debug token registration. Release APKs use Play Integrity and can fall back to local support when the service is unavailable. To force local support in development, use `flutter run --dart-define=SUPPORT_OFFLINE_ONLY=true`. See the [Gemini pilot guide](.spec/fuel-card-portal/step7_ai_support/gemini-pilot.md) for configuration overrides and device verification.
+
 ## Build a sideload APK
 
 The baseline APK is at `build/android-acceptance/fleet-cards-demo-release.apk`. See the [baseline acceptance handoff](.spec/fuel-card-portal/step5_android_acceptance/package.md) for its checksum and API 24 and 36 results. See the [Flutter redesign handoff](.spec/fuel-card-portal/step6_figma_redesign/flutter-handoff.md) for the redesigned build.

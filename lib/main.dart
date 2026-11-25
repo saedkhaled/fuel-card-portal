@@ -6,6 +6,8 @@ import 'app/demo_preferences.dart';
 import 'app/portal_app.dart';
 import 'demo/demo_fixtures.dart';
 
+import 'features/support/support_gemini.dart';
+
 void main() {
   const scenario = String.fromEnvironment('DEMO_SCENARIO');
   runApp(
@@ -14,6 +16,7 @@ void main() {
       preferences: AndroidDemoPreferences(SharedPreferencesAsync()),
       now: DateTime.now,
       scenario: scenario.isEmpty ? null : scenario,
+      supportGemini: SupportGemini.configured(),
     ),
   );
 }

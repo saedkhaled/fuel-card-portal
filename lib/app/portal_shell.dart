@@ -25,7 +25,7 @@ enum PortalTab {
   String title(AppLocalizations l10n) => switch (this) {
     PortalTab.home => l10n.home,
     PortalTab.cards => l10n.cards,
-    PortalTab.support => l10n.support,
+    PortalTab.support => l10n.assistantTab,
     PortalTab.stations => l10n.stations,
     PortalTab.more => l10n.more,
   };
@@ -81,8 +81,10 @@ class _PortalShellState extends State<PortalShell> {
                     ? (PortalMark.hasBrandArtwork
                           ? l10n.portalBrand
                           : l10n.appTitle)
+                    : _inSupport
+                    ? l10n.assistantTitle
                     : PortalTab.values[navigation.currentIndex].title(l10n),
-                maxLines: 1,
+                maxLines: _inSupport ? 2 : 1,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

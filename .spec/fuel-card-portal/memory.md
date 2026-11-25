@@ -4,7 +4,7 @@ Android baseline archived 25 November 2026 · [Closeout and verification record]
 
 ## Current state
 
-- 07 Support searches 58 offline passages from Golden Gate’s website, the supplied Arabic customer guide, and the demo app guides. It handles common rephrasings and short follow-ups, shows its source, and displays a searching state. The connected Gemini pilot has an implementation and test plan. Online catalog updates remain planned. [Offline design and evidence](step7_ai_support/package.md#offline-support-design) · [Gemini pilot](step7_ai_support/gemini-pilot.md)
+- 07 Golden Gate AI Assistant searches 61 bundled passages for offline answers. The configured Android app tries Gemini first and can give general guidance about Golden Gate, its services, the app, or the website. The assistant can introduce itself online and offline. The chat validates factual replies internally and omits provider and source labels. Release attestation and online catalog updates remain planned. [Offline design and evidence](step7_ai_support/package.md#offline-support-design) · [Gemini pilot](step7_ai_support/gemini-pilot.md)
 
 - The Flutter redesign is applied and verified on Android 16 in English and Arabic. All 27 local tests and five Android integration tests passed. The branded APK and implementation evidence are recorded in the [Flutter handoff](step6_figma_redesign/flutter-handoff.md#flutter-implementation-evidence).
 - 06 Figma redesign and design handoff are complete. The user confirmed that the existing prototype examples are optional. The Flutter handoff records the Android implementation and accessibility checks. [Design and evidence](step6_figma_redesign/package.md#implementation-evidence)
@@ -32,7 +32,7 @@ Android baseline archived 25 November 2026 · [Closeout and verification record]
 | [04 Account services](step4_account_services/package.md) | Complete | [Account services evidence](step4_account_services/package.md#evidence-and-downstream-contract) |
 | [05 Android acceptance](step5_android_acceptance/package.md) | Complete | [Release and verification](step5_android_acceptance/package.md#artifact-and-verification-evidence), [R01–R23 coverage](step5_android_acceptance/coverage.md) |
 | [06 Figma redesign](step6_figma_redesign/package.md) | Complete | [Evidence](step6_figma_redesign/package.md#implementation-evidence), [Flutter handoff](step6_figma_redesign/flutter-handoff.md) |
-| [07 Arabic-first AI support](step7_ai_support/package.md) | Offline demo verified · Connected support planned | [Offline implementation evidence](step7_ai_support/offline-implementation.md) |
+| [07 Arabic-first AI support](step7_ai_support/package.md) | Offline demo and emulator Gemini verified · Release attestation pending | [Offline implementation evidence](step7_ai_support/offline-implementation.md) |
 
 ## Decisions and anchors
 

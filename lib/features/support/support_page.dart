@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart' show Bidi;
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../app/portal_destinations.dart';
 import '../../app/portal_shell.dart';
 import '../../app/portal_theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'support_catalog.dart';
+import 'support_gemini.dart';
 
 class SupportPage extends StatefulWidget {
   const SupportPage({super.key});
@@ -20,7 +20,14 @@ class SupportPage extends StatefulWidget {
 class _SupportPageState extends State<SupportPage> {
   final _composer = TextEditingController();
   final _scroll = ScrollController();
-  final _turns = <({String question, SupportEntry? entry})>[];
+  final _turns =
+      <
+        ({
+          String question,
+          SupportEntry? entry,
+          SupportGeneratedReply? generated,
+        })
+      >[];
   late Future<SupportCatalog> _catalog;
   bool _searching = false;
 
@@ -41,9 +48,10 @@ class _SupportPageState extends State<SupportPage> {
     final question = text.trim();
     if (question.isEmpty || _searching) return;
     final previous = _turns.lastOrNull?.entry;
+    final gemini = context.read<SupportGemini?>();
     setState(() {
       _searching = true;
-      _turns.add((question: question, entry: null));
+      _turns.add((question: question, entry: null, generated: null));
     });
     _composer.clear();
     if (_scroll.hasClients) _scroll.jumpTo(0);
@@ -51,9 +59,21 @@ class _SupportPageState extends State<SupportPage> {
     // Keep the search state visible even when the bundled index is fast.
     await Future<void>.delayed(const Duration(milliseconds: 450));
     if (!mounted) return;
-    final entry = catalog.findAnswer(question, previous: previous);
+    final generated = await gemini?.answer(
+      catalog,
+      question,
+      previous: previous,
+    );
+    if (!mounted) return;
+    final entry = generated == null
+        ? catalog.findAnswer(question, previous: previous)
+        : generated.source;
     setState(() {
-      _turns[_turns.length - 1] = (question: question, entry: entry);
+      _turns[_turns.length - 1] = (
+        question: question,
+        entry: entry,
+        generated: generated,
+      );
       _searching = false;
     });
   }
@@ -121,6 +141,7 @@ class _SupportPageState extends State<SupportPage> {
                         return _SupportTurn(
                           question: turn.question,
                           entry: turn.entry,
+                          generated: turn.generated,
                           searching: _searching && index == 0,
                         );
                       },
@@ -208,11 +229,13 @@ class _SupportTurn extends StatelessWidget {
   const _SupportTurn({
     required this.question,
     required this.entry,
+    required this.generated,
     required this.searching,
   });
 
   final String question;
   final SupportEntry? entry;
+  final SupportGeneratedReply? generated;
   final bool searching;
 
   @override
@@ -220,6 +243,15 @@ class _SupportTurn extends StatelessWidget {
     final labels = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final answer = entry;
+    final reply = generated;
+    final response = answer?.id == SupportCatalog.assistantIdentityId
+        ? labels.assistantIntroduction
+        : switch (reply) {
+            null => answer?.passage ?? labels.supportNoAnswer,
+            (outOfScope: true, text: _, source: _) =>
+              labels.supportGeminiOutOfScope,
+            _ => reply.text ?? labels.supportGeminiNoAnswer,
+          };
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Column(
@@ -248,7 +280,7 @@ class _SupportTurn extends StatelessWidget {
             child: searching
                 ? const _SearchingReply()
                 : Padding(
-                    padding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
+                    padding: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -257,58 +289,36 @@ class _SupportTurn extends StatelessWidget {
                           child: Align(
                             alignment: Alignment.centerRight,
                             child: Text(
-                              answer?.passage ?? labels.supportNoAnswer,
-                              textDirection: TextDirection.rtl,
+                              response,
+                              textDirection: _textDirection(response),
                             ),
                           ),
                         ),
-                        if (answer == null)
+                        if (answer == null && reply?.text == null)
                           const _FaqLink()
-                        else ...[
-                          if (answer.guideSection case final section?)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: Text(
-                                '${labels.supportGuideSource} · $section',
-                                style: theme.textTheme.labelMedium,
-                              ),
-                            ),
-                          if (answer.sourceUrl case final sourceUrl?)
-                            TextButton.icon(
-                              onPressed: () => _openSource(context, sourceUrl),
-                              icon: const Icon(Icons.open_in_new, size: 16),
-                              label: Text(labels.supportOfficialSource),
-                            )
-                          else if (answer.guideSection == null) ...[
-                            const SizedBox(height: 6),
-                            Text(
-                              labels.supportSampleSource,
-                              style: theme.textTheme.labelMedium?.copyWith(
-                                color: portalMuted,
-                              ),
-                            ),
-                          ],
-                          if (answer.route case final route?)
-                            TextButton(
-                              onPressed: () {
-                                if (route == PortalDestinations.stations) {
-                                  context.go(route);
-                                } else {
-                                  context.push(route);
-                                }
-                              },
-                              child: Text(switch (route) {
-                                PortalDestinations.balances => labels.balances,
-                                PortalDestinations.topUp => labels.topUp,
-                                PortalDestinations.stations => labels.stations,
-                                PortalDestinations.subscriptions =>
-                                  labels.subscriptions,
-                                PortalDestinations.prices =>
-                                  labels.priceBulletins,
-                                _ => labels.supportFaq,
-                              }),
-                            ),
-                        ],
+                        else if (answer?.route case final route?
+                            when route != PortalDestinations.support)
+                          TextButton(
+                            onPressed: () {
+                              if (route == PortalDestinations.stations ||
+                                  route == PortalDestinations.cards) {
+                                context.go(route);
+                              } else {
+                                context.push(route);
+                              }
+                            },
+                            child: Text(switch (route) {
+                              PortalDestinations.balances => labels.balances,
+                              PortalDestinations.cards => labels.cards,
+                              PortalDestinations.topUp => labels.topUp,
+                              PortalDestinations.stations => labels.stations,
+                              PortalDestinations.subscriptions =>
+                                labels.subscriptions,
+                              PortalDestinations.prices =>
+                                labels.priceBulletins,
+                              _ => labels.supportFaq,
+                            }),
+                          ),
                       ],
                     ),
                   ),
@@ -342,20 +352,6 @@ class _SearchingReply extends StatelessWidget {
           Flexible(child: Text(AppLocalizations.of(context)!.supportSearching)),
         ],
       ),
-    ),
-  );
-}
-
-Future<void> _openSource(BuildContext context, Uri url) async {
-  try {
-    if (await launchUrl(url, mode: LaunchMode.externalApplication)) return;
-  } on Exception {
-    // A device can have no enabled browser.
-  }
-  if (!context.mounted) return;
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-      content: Text(AppLocalizations.of(context)!.supportSourceUnavailable),
     ),
   );
 }

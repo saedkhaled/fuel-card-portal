@@ -11,6 +11,7 @@ import '../features/cards/card_notes.dart';
 import '../features/finance/fleet_data.dart';
 import '../features/stations/station_network.dart';
 import '../features/support/support_catalog.dart';
+import '../features/support/support_gemini.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'demo_preferences.dart';
 import 'portal_router.dart';
@@ -24,6 +25,7 @@ class PortalBootstrap extends StatefulWidget {
     required this.preferences,
     required this.now,
     this.scenario,
+    this.supportGemini,
     this.initialLocation = '/home',
   });
 
@@ -31,6 +33,7 @@ class PortalBootstrap extends StatefulWidget {
   final DemoPreferences preferences;
   final DateTime Function() now;
   final String? scenario;
+  final SupportGemini? supportGemini;
   final String initialLocation;
 
   @override
@@ -80,6 +83,7 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
           loader: widget.loader,
           now: widget.now,
           initialLocation: widget.initialLocation,
+          supportGemini: widget.supportGemini,
         );
       }
 
@@ -146,6 +150,7 @@ class _PortalApp extends StatefulWidget {
     required this.preferences,
     required this.now,
     required this.initialLocation,
+    required this.supportGemini,
   });
 
   final _Startup startup;
@@ -153,6 +158,7 @@ class _PortalApp extends StatefulWidget {
   final DemoPreferences preferences;
   final DateTime Function() now;
   final String initialLocation;
+  final SupportGemini? supportGemini;
 
   @override
   State<_PortalApp> createState() => _PortalAppState();
@@ -209,6 +215,7 @@ class _PortalAppState extends State<_PortalApp> {
         ),
       ),
       Provider(create: (_) => SupportRepository(widget.loader)),
+      Provider<SupportGemini?>.value(value: widget.supportGemini),
       ChangeNotifierProvider.value(value: _notes),
       ChangeNotifierProvider.value(value: _session),
       ChangeNotifierProvider.value(value: _settings),
