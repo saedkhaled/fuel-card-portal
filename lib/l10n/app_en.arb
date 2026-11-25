@@ -150,5 +150,30 @@
         "type": "String"
       }
     }
-  }
+  },
+  "searchStations": "Search stations by name or address",
+  "city": "City",
+  "allCities": "All cities",
+  "allProducts": "All products",
+  "available": "Available",
+  "runningLow": "Running low",
+  "unavailable": "Not available",
+  "address": "Address",
+  "availability": "Fuel availability",
+  "directions": "Directions",
+  "mockDirections": "Demo directions",
+  "mockDirectionsHelp": "These sample directions are for the offline demo.",
+  "stationDetails": "Station details",
+  "noStations": "No stations match your search.",
+  "missingStation": "This station is unavailable.",
+  "networkLoadFailed": "Could not load stations or price bulletins.",
+  "currentBulletin": "Current bulletin",
+  "previousBulletins": "Previous bulletins",
+  "previousBulletin": "Previous bulletin",
+  "bulletinDetails": "Bulletin details",
+  "viewBulletin": "View bulletin",
+  "effectiveDate": "Effective date",
+  "fuelPrices": "Prices per liter",
+  "noBulletins": "No price bulletins to show.",
+  "missingBulletin": "This price bulletin is unavailable."
 }

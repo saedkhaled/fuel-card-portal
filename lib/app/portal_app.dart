@@ -7,6 +7,7 @@ import '../features/auth/session_controller.dart';
 import '../features/auth/session_repository.dart';
 import '../features/cards/card_notes.dart';
 import '../features/finance/fleet_data.dart';
+import '../features/stations/station_network.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'demo_preferences.dart';
 import 'portal_router.dart';
@@ -69,6 +70,7 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
       if (startup != null) {
         return _PortalApp(
           startup: startup,
+          loader: widget.loader,
           preferences: widget.preferences,
           now: widget.now,
           initialLocation: widget.initialLocation,
@@ -132,12 +134,14 @@ class _Startup {
 class _PortalApp extends StatefulWidget {
   const _PortalApp({
     required this.startup,
+    required this.loader,
     required this.preferences,
     required this.now,
     required this.initialLocation,
   });
 
   final _Startup startup;
+  final FixtureLoader loader;
   final DemoPreferences preferences;
   final DateTime Function() now;
   final String initialLocation;
@@ -184,6 +188,12 @@ class _PortalAppState extends State<_PortalApp> {
     providers: [
       Provider.value(value: widget.startup.fixtures),
       Provider.value(value: widget.startup.fleet),
+      Provider(
+        create: (_) => NetworkRepository(
+          widget.loader,
+          widget.startup.fixtures.files['network'],
+        ),
+      ),
       ChangeNotifierProvider.value(value: _notes),
       ChangeNotifierProvider.value(value: _session),
       ChangeNotifierProvider.value(value: _settings),

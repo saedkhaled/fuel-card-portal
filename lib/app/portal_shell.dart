@@ -13,7 +13,7 @@ enum PortalTab {
   home('/home', Icons.dashboard_outlined),
   cards(PortalDestinations.cards, Icons.credit_card_outlined),
   balances(PortalDestinations.balances, Icons.account_balance_wallet_outlined),
-  stations('/stations', Icons.local_gas_station_outlined),
+  stations(PortalDestinations.stations, Icons.local_gas_station_outlined),
   more('/more', Icons.menu);
 
   const PortalTab(this.path, this.icon);
@@ -163,6 +163,11 @@ class FoundationMore extends StatelessWidget {
           leading: const Icon(Icons.receipt_long_outlined),
           title: Text(l10n.sales),
           onTap: () => context.push(PortalDestinations.sales),
+        ),
+        ListTile(
+          leading: const Icon(Icons.price_change_outlined),
+          title: Text(l10n.priceBulletins),
+          onTap: () => context.push(PortalDestinations.prices),
         ),
         ListTile(
           leading: const Icon(Icons.logout),

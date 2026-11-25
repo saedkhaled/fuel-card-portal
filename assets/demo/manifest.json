@@ -6,14 +6,16 @@
       "files": {
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/cards.json",
-        "finance": "assets/demo/standard/finance.json"
+        "finance": "assets/demo/standard/finance.json",
+        "network": "assets/demo/standard/network.json"
       }
     },
     "recoverable_error": {
       "files": {
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/cards.json",
-        "finance": "assets/demo/standard/finance.json"
+        "finance": "assets/demo/standard/finance.json",
+        "network": "assets/demo/standard/network.json"
       },
       "failOnce": "requestCode"
     },
@@ -21,14 +23,16 @@
       "files": {
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/cards.json",
-        "finance": "assets/demo/standard/quiet_finance.json"
+        "finance": "assets/demo/standard/quiet_finance.json",
+        "network": "assets/demo/standard/network.json"
       }
     },
     "empty": {
       "files": {
         "auth": "assets/demo/standard/auth.json",
         "cards": "assets/demo/standard/empty_cards.json",
-        "finance": "assets/demo/standard/empty_finance.json"
+        "finance": "assets/demo/standard/empty_finance.json",
+        "network": "assets/demo/standard/empty_network.json"
       }
     }
   }

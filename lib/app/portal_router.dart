@@ -6,6 +6,8 @@ import '../features/auth/session_controller.dart';
 import '../features/cards/cards_pages.dart';
 import '../features/finance/finance_pages.dart';
 import '../features/finance/finance_widgets.dart';
+import '../features/prices/price_pages.dart';
+import '../features/stations/station_pages.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'portal_destinations.dart';
 import 'portal_shell.dart';
@@ -57,13 +59,24 @@ GoRouter createPortalRouter(
       ),
       GoRoute(
         path: PortalDestinations.prices,
-        builder: (context, _) {
-          final labels = AppLocalizations.of(context)!;
-          return Scaffold(
-            appBar: AppBar(title: Text(labels.priceBulletins)),
-            body: EmptyFinance(labels.sectionPending),
-          );
-        },
+        builder: (_, _) => const PriceBulletinsPage(),
+      ),
+      GoRoute(
+        path: '${PortalDestinations.prices}/:bulletinId',
+        builder: (_, state) => PriceBulletinDetailsPage(
+          bulletinId: state.pathParameters['bulletinId']!,
+        ),
+      ),
+      GoRoute(
+        path: '${PortalDestinations.stations}/:stationId',
+        builder: (_, state) =>
+            StationDetailsPage(stationId: state.pathParameters['stationId']!),
+      ),
+      GoRoute(
+        path: '${PortalDestinations.stations}/:stationId/directions',
+        builder: (_, state) => StationDirectionsPage(
+          stationId: state.pathParameters['stationId']!,
+        ),
       ),
       GoRoute(
         path: PortalDestinations.notifications,
@@ -88,7 +101,7 @@ GoRouter createPortalRouter(
                     PortalTab.more => const FoundationMore(),
                     PortalTab.cards => const CardsPage(),
                     PortalTab.balances => const BalancesPage(),
-                    PortalTab.stations => PendingTab(tab: tab),
+                    PortalTab.stations => const StationsPage(),
                   },
                 ),
               ],

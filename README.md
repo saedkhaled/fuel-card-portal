@@ -20,3 +20,5 @@ The demo includes sign-in, session restoration, Home, Cards, fuel-card notes, Ba
 - [JSON fixture contract](.spec/fuel-card-portal/fixtures.md)
 - [Android acceptance checks](.spec/fuel-card-portal/verification.md)
 - [Implementation rules](AGENTS.md) and [execution handoff](.spec/fuel-card-portal/prompt.md)
+
+Stations, the local directions preview, and current and historical bulletins are available offline.

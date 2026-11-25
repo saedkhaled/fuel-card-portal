@@ -4,6 +4,8 @@ Updated 25 November 2026
 
 ## Current state
 
+- 03 Stations and prices completed. The bundled network fixture, station filters, offline directions, and bulletin history passed Arabic/English Android offline checks. The ARM64 debug APK is in `build/stations-prices/`.
+
 - 02 Cards and finance completed. JSON-backed Home, cards and notes, balances, operations, sales, and CSV/XLSX passed Android 16 offline checks. The ARM64 debug APK is in `build/cards-finance/`.
 
 - 01 Foundation completed on the checkout of `main` from `a6a2352`. Offline JSON sign-in, Arabic/English locale selection, guarded shell, and session persistence were verified on Android 16/API 36. A debug-signed ARM64 APK is available in `build/foundation/`.
@@ -17,7 +19,7 @@ Updated 25 November 2026
 | --- | --- | --- |
 | [01 Foundation](step1_foundation/package.md) | Complete | [Foundation evidence](step1_foundation/package.md#evidence) |
 | [02 Cards and finance](step2_cards_finance/package.md) | Complete | [Cards and finance evidence](step2_cards_finance/package.md#evidence-and-downstream-contract) |
-| [03 Stations and prices](step3_stations_prices/package.md) | Ready | Pending |
+| [03 Stations and prices](step3_stations_prices/package.md) | Complete | [Stations and prices evidence](step3_stations_prices/package.md#evidence-and-downstream-contract) |
 | [04 Account services](step4_account_services/package.md) | Ready | Pending |
 | [05 Android acceptance](step5_android_acceptance/package.md) | Awaiting 03–04 | Pending |
 
@@ -32,5 +34,5 @@ Updated 25 November 2026
 ## Next chat command
 
 ```text
-/spec-apply fuel-card-portal step3_stations_prices
+/spec-apply fuel-card-portal step4_account_services
 ```

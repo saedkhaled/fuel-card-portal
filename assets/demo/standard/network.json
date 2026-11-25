@@ -1,0 +1,154 @@
+{
+  "cities": [
+    {
+      "id": "damascus",
+      "name": {
+        "en": "Damascus",
+        "ar": "دمشق"
+      }
+    },
+    {
+      "id": "homs",
+      "name": {
+        "en": "Homs",
+        "ar": "حمص"
+      }
+    },
+    {
+      "id": "aleppo",
+      "name": {
+        "en": "Aleppo",
+        "ar": "حلب"
+      }
+    }
+  ],
+  "products": [
+    {
+      "id": "diesel",
+      "name": {
+        "en": "Diesel",
+        "ar": "مازوت"
+      }
+    },
+    {
+      "id": "benzene",
+      "name": {
+        "en": "Benzine",
+        "ar": "بنزين"
+      }
+    },
+    {
+      "id": "premium",
+      "name": {
+        "en": "Premium benzine",
+        "ar": "بنزين ممتاز"
+      }
+    }
+  ],
+  "stations": [
+    {
+      "id": "dam-depot",
+      "cityId": "damascus",
+      "name": {
+        "en": "South Depot",
+        "ar": "محطة المستودع الجنوبي"
+      },
+      "address": {
+        "en": "Depot Road, Gate 2",
+        "ar": "طريق المستودع، البوابة ٢"
+      },
+      "availability": {
+        "diesel": "available",
+        "benzene": "low",
+        "premium": "unavailable"
+      },
+      "directions": [
+        {
+          "en": "Start at the fleet depot entrance.",
+          "ar": "ابدأ من مدخل مستودع الأسطول."
+        },
+        {
+          "en": "Follow Depot Road to the second gate.",
+          "ar": "اتبع طريق المستودع حتى البوابة الثانية."
+        },
+        {
+          "en": "The station is beside the marked service lane.",
+          "ar": "المحطة بجانب مسار الخدمة المحدد."
+        }
+      ]
+    },
+    {
+      "id": "hms-junction",
+      "cityId": "homs",
+      "name": {
+        "en": "Junction Station",
+        "ar": "محطة التقاطع"
+      },
+      "address": {
+        "en": "East Junction, service lane",
+        "ar": "التقاطع الشرقي، مسار الخدمة"
+      },
+      "availability": {
+        "diesel": "low",
+        "benzene": "available"
+      },
+      "directions": null
+    },
+    {
+      "id": "alp-yard",
+      "cityId": "aleppo",
+      "name": {
+        "en": "North Yard",
+        "ar": "محطة الساحة الشمالية"
+      },
+      "address": {
+        "en": "Terminal Road, loading yard",
+        "ar": "طريق المحطة، ساحة التحميل"
+      },
+      "availability": {
+        "diesel": "unavailable",
+        "premium": "available"
+      },
+      "directions": [
+        {
+          "en": "Start at the terminal roundabout.",
+          "ar": "ابدأ من دوار المحطة."
+        },
+        {
+          "en": "Continue to the marked loading yard entrance.",
+          "ar": "تابع حتى مدخل ساحة التحميل المحدد."
+        }
+      ]
+    }
+  ],
+  "currentBulletinId": "prices-2026-11-24",
+  "bulletins": [
+    {
+      "id": "prices-2026-10-15",
+      "effectiveDate": "2026-10-15",
+      "prices": {
+        "diesel": 47000,
+        "benzene": 39500,
+        "premium": 56000
+      }
+    },
+    {
+      "id": "prices-2026-11-24",
+      "effectiveDate": "2026-11-24",
+      "prices": {
+        "diesel": 50000,
+        "benzene": 43000,
+        "premium": 60000
+      }
+    },
+    {
+      "id": "prices-2026-11-01",
+      "effectiveDate": "2026-11-01",
+      "prices": {
+        "diesel": 48500,
+        "benzene": 42000,
+        "premium": 58000
+      }
+    }
+  ]
+}

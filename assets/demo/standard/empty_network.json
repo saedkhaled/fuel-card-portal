@@ -1,0 +1,51 @@
+{
+  "cities": [
+    {
+      "id": "damascus",
+      "name": {
+        "en": "Damascus",
+        "ar": "دمشق"
+      }
+    },
+    {
+      "id": "homs",
+      "name": {
+        "en": "Homs",
+        "ar": "حمص"
+      }
+    },
+    {
+      "id": "aleppo",
+      "name": {
+        "en": "Aleppo",
+        "ar": "حلب"
+      }
+    }
+  ],
+  "products": [
+    {
+      "id": "diesel",
+      "name": {
+        "en": "Diesel",
+        "ar": "مازوت"
+      }
+    },
+    {
+      "id": "benzene",
+      "name": {
+        "en": "Benzine",
+        "ar": "بنزين"
+      }
+    },
+    {
+      "id": "premium",
+      "name": {
+        "en": "Premium benzine",
+        "ar": "بنزين ممتاز"
+      }
+    }
+  ],
+  "stations": [],
+  "currentBulletinId": null,
+  "bulletins": []
+}
