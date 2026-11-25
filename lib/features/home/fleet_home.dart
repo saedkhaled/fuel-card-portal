@@ -74,7 +74,13 @@ class FleetHome extends StatelessWidget {
                           vertical: 10,
                         ),
                       ),
-                      onPressed: () => context.go(route),
+                      onPressed: () {
+                        if (route == PortalDestinations.balances) {
+                          context.push(route);
+                        } else {
+                          context.go(route);
+                        }
+                      },
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [

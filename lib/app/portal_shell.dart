@@ -13,7 +13,7 @@ import 'portal_theme.dart';
 enum PortalTab {
   home('/home', Icons.dashboard_outlined),
   cards(PortalDestinations.cards, Icons.credit_card_outlined),
-  balances(PortalDestinations.balances, Icons.account_balance_wallet_outlined),
+  support(PortalDestinations.support, Icons.support_agent_outlined),
   stations(PortalDestinations.stations, Icons.local_gas_station_outlined),
   more('/more', Icons.menu);
 
@@ -25,16 +25,46 @@ enum PortalTab {
   String title(AppLocalizations l10n) => switch (this) {
     PortalTab.home => l10n.home,
     PortalTab.cards => l10n.cards,
-    PortalTab.balances => l10n.balances,
+    PortalTab.support => l10n.support,
     PortalTab.stations => l10n.stations,
     PortalTab.more => l10n.more,
   };
 }
 
-class PortalShell extends StatelessWidget {
+class PortalShell extends StatefulWidget {
   const PortalShell({super.key, required this.navigation});
 
   final StatefulNavigationShell navigation;
+
+  static void returnFromSupport(BuildContext context) {
+    final shell = context.findAncestorStateOfType<_PortalShellState>();
+    if (shell != null && shell._inSupport) {
+      shell._selectTab(shell._returnTab);
+    }
+  }
+
+  @override
+  State<PortalShell> createState() => _PortalShellState();
+}
+
+class _PortalShellState extends State<PortalShell> {
+  int _returnTab = PortalTab.home.index;
+
+  StatefulNavigationShell get navigation => widget.navigation;
+
+  bool get _inSupport => navigation.currentIndex == PortalTab.support.index;
+
+  void _selectTab(int index) {
+    if (index == navigation.currentIndex) {
+      if (!_inSupport) navigation.goBranch(index, initialLocation: true);
+      return;
+    }
+    if (index == PortalTab.support.index) {
+      _returnTab = navigation.currentIndex;
+    }
+    if (_inSupport) FocusManager.instance.primaryFocus?.unfocus();
+    navigation.goBranch(index);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,34 +114,37 @@ class PortalShell extends StatelessWidget {
               ? Duration.zero
               : const Duration(milliseconds: 140),
           labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
-          onDestinationSelected: (index) => navigation.goBranch(
-            index,
-            initialLocation: index == navigation.currentIndex,
-          ),
+          onDestinationSelected: _selectTab,
           destinations: [
             for (final tab in PortalTab.values)
               NavigationDestination(
-                icon: Icon(tab.icon, color: portalMuted),
-                selectedIcon: Stack(
-                  alignment: Alignment.topCenter,
-                  clipBehavior: Clip.none,
-                  children: [
-                    Icon(tab.icon, color: portalNavy),
-                    const Positioned(
-                      top: -9,
-                      child: SizedBox(
-                        width: 25,
-                        height: 3,
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: portalGold,
-                            borderRadius: BorderRadius.all(Radius.circular(2)),
+                icon: tab == PortalTab.support
+                    ? const _SupportTabIcon(selected: false)
+                    : Icon(tab.icon, color: portalMuted),
+                selectedIcon: tab == PortalTab.support
+                    ? const _SupportTabIcon(selected: true)
+                    : Stack(
+                        alignment: Alignment.topCenter,
+                        clipBehavior: Clip.none,
+                        children: [
+                          Icon(tab.icon, color: portalNavy),
+                          const Positioned(
+                            top: -9,
+                            child: SizedBox(
+                              width: 25,
+                              height: 3,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: portalGold,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(2),
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
                 label: tab.title(l10n),
               ),
           ],
@@ -119,6 +152,29 @@ class PortalShell extends StatelessWidget {
       ),
     );
   }
+}
+
+class _SupportTabIcon extends StatelessWidget {
+  const _SupportTabIcon({required this.selected});
+
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) => Transform.translate(
+    offset: const Offset(0, -3),
+    child: Material(
+      color: selected ? portalGold : portalNavy,
+      elevation: 3,
+      shape: const CircleBorder(),
+      child: SizedBox.square(
+        dimension: 42,
+        child: Icon(
+          PortalTab.support.icon,
+          color: selected ? portalInk : Colors.white,
+        ),
+      ),
+    ),
+  );
 }
 
 class FoundationHome extends StatefulWidget {

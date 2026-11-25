@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../l10n/generated/app_localizations.dart';
 import '../features/account/account_pages.dart';
 import '../features/account/top_up_page.dart';
 import '../features/auth/auth_pages.dart';
@@ -10,6 +11,7 @@ import '../features/finance/finance_pages.dart';
 import '../features/prices/price_pages.dart';
 import '../features/notifications/notification_pages.dart';
 import '../features/stations/station_pages.dart';
+import '../features/support/support_page.dart';
 import 'portal_destinations.dart';
 import 'portal_shell.dart';
 
@@ -122,6 +124,13 @@ GoRouter createPortalRouter(
         path: PortalDestinations.about,
         builder: (_, _) => const AboutPage(),
       ),
+      GoRoute(
+        path: PortalDestinations.balances,
+        builder: (context, _) => Scaffold(
+          appBar: AppBar(title: Text(AppLocalizations.of(context)!.balances)),
+          body: const SafeArea(child: BalancesPage()),
+        ),
+      ),
       StatefulShellRoute.indexedStack(
         builder: (_, _, navigation) => PortalShell(navigation: navigation),
         branches: [
@@ -134,7 +143,7 @@ GoRouter createPortalRouter(
                     PortalTab.home => const FoundationHome(),
                     PortalTab.more => const AccountPage(),
                     PortalTab.cards => const CardsPage(),
-                    PortalTab.balances => const BalancesPage(),
+                    PortalTab.support => const SupportPage(),
                     PortalTab.stations => const StationsPage(),
                   },
                 ),

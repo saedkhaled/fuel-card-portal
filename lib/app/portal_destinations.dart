@@ -1,5 +1,6 @@
 abstract final class PortalDestinations {
   static const cards = '/cards';
+  static const support = '/support';
   static const balances = '/balances';
   static const sales = '/sales';
   static const subscriptions = '/subscriptions';

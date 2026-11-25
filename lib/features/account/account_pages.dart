@@ -98,6 +98,11 @@ class AccountPage extends StatelessWidget {
         _SectionTitle(labels.services),
         for (final (title, icon, path) in [
           (
+            labels.balances,
+            Icons.account_balance_wallet_outlined,
+            PortalDestinations.balances,
+          ),
+          (
             labels.subscriptions,
             Icons.receipt_outlined,
             PortalDestinations.subscriptions,

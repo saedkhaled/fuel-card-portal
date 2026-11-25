@@ -12,7 +12,7 @@ lib/
   core/                       # formatting, clock, scoped platform adapters
   demo/                       # asset loading, validation and scenario selection
   features/
-    auth/ home/ cards/ finance/ stations/ prices/ account/ notifications/
+    auth/ home/ cards/ finance/ stations/ prices/ account/ notifications/ support/
   l10n/                       # English and Arabic ARB
 test/                         # mirrors app features
 integration_test/             # Android demo journey
@@ -22,7 +22,7 @@ Feature views own rendering, view models own commands and screen state, reposito
 
 ## Navigation and state
 
-Signed-out stack is phone → code. Successful verification replaces it with the shell. Shell branches are Home, Cards, Balances, Stations, and More. Global notifications and cross-tab shortcuts use the same destinations as their menu entries. Card links carry the stable card ID. Card details land on the details tab, while an operations shortcut opens the financial operations tab or its shared view. Android Back closes transient UI first, then detail routes, with the originating list, search, and filters restored. Stale route IDs show a friendly missing-record state. Logout clears protected navigation and transient state while local preferences and scoped notes remain available to the same demo profile.
+Signed-out stack is phone → code. Successful verification replaces it with the shell. Shell branches are Home, Cards, Support, Stations, and More. Home and More open the shared Balances route. Support uses a bundled sample Arabic Q&A catalog and keeps the draft and conversation in the signed-in shell. Global notifications and cross-tab shortcuts use the same destinations as their menu entries. Card links carry the stable card ID. Card details land on the details tab, while an operations shortcut opens the financial operations tab or its shared view. Android Back closes transient UI first, then detail routes, with the originating list, search, and filters restored. Stale route IDs show a friendly missing-record state. Logout clears protected navigation and transient state while local preferences and scoped notes remain available to the same demo profile.
 
 Every async screen models loading, content, empty, error, and retry as applicable. Fake delays are deterministic and zero or clock-driven in tests. Cancel or ignore stale responses after newer requests, route exit, or session change. Disable repeated submit, Save, and export while the corresponding operation is in progress. Use stable list keys and lazy rendering for the large-data scenario.
 

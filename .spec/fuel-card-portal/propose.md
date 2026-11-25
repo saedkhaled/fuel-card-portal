@@ -37,3 +37,7 @@ Estimate is 13–20 agent-hours under functioning Android tooling, with a first 
 ## Design follow-up
 
 [Package 06](step6_figma_redesign/package.md) delivers a brand-aligned, bilingual Figma redesign and motion specification on top of the archived Android baseline. The handoff can drive a separately scoped Flutter update.
+
+## Support follow-up
+
+[Package 07](step7_ai_support/package.md) plans a centered Support destination, Arabic answers based on approved support material, and access to approved FAQ answers offline. It preserves the Arabic first-run default and English language selection.

@@ -64,7 +64,10 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.text('dam 1284'), findsOneWidget);
 
-      await tap(find.byIcon(Icons.account_balance_wallet_outlined));
+      await tap(find.byIcon(Icons.menu));
+      final balances = find.widgetWithText(ListTile, 'Balances');
+      await tester.scrollUntilVisible(balances, 200);
+      await tap(balances);
       expect(find.text('Total balance'), findsOneWidget);
       await tap(find.byTooltip('Export'));
       expect(find.text('CSV'), findsOneWidget);
@@ -79,7 +82,8 @@ void main() {
       await tester.pageBack();
       await tester.pumpAndSettle();
 
-      await tap(find.byIcon(Icons.menu));
+      await tester.pageBack();
+      await tester.pumpAndSettle();
       await tester.scrollUntilVisible(find.text('Sales'), 180);
       await tap(find.text('Sales'));
       expect(find.textContaining('RC-3104'), findsOneWidget);

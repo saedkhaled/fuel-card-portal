@@ -10,6 +10,7 @@ import '../features/auth/session_repository.dart';
 import '../features/cards/card_notes.dart';
 import '../features/finance/fleet_data.dart';
 import '../features/stations/station_network.dart';
+import '../features/support/support_catalog.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'demo_preferences.dart';
 import 'portal_router.dart';
@@ -207,6 +208,7 @@ class _PortalAppState extends State<_PortalApp> {
           widget.startup.fixtures.files['network'],
         ),
       ),
+      Provider(create: (_) => SupportRepository(widget.loader)),
       ChangeNotifierProvider.value(value: _notes),
       ChangeNotifierProvider.value(value: _session),
       ChangeNotifierProvider.value(value: _settings),
