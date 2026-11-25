@@ -83,7 +83,7 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
       }
 
       return MaterialApp(
-        theme: buildPortalTheme(),
+        theme: buildPortalTheme(locale: const Locale('ar')),
         debugShowCheckedModeBanner: false,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
@@ -215,7 +215,7 @@ class _PortalAppState extends State<_PortalApp> {
       builder: (context, settings, _) => MaterialApp.router(
         onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
         debugShowCheckedModeBanner: false,
-        theme: buildPortalTheme(),
+        theme: buildPortalTheme(locale: settings.locale),
         locale: settings.locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,

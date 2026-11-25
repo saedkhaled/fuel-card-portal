@@ -5,20 +5,25 @@ import '../cards/fleet_card.dart';
 import 'finance_models.dart';
 
 extension FinanceLabels on AppLocalizations {
-  String amount(int minor, {bool signed = false}) {
+  String amount(int minor, {bool signed = false}) =>
+      isolate('${amountValue(minor, signed: signed)} SYP');
+
+  String amountValue(int minor, {bool signed = false}) {
     final value = NumberFormat.currency(
       locale: localeName,
       symbol: '',
       decimalDigits: 2,
-    ).format(minor / 100).trim();
-    return isolate('${signed && minor > 0 ? '+' : ''}$value SYP');
+    ).format(minor / 100).replaceAll(_directionMarks, '').trim();
+    return '${signed && minor > 0 ? '+' : ''}$value';
   }
 
   String day(DateTime date) =>
       DateFormat.yMMMd(localeName).format(date.toUtc());
 
-  String timestamp(DateTime instant) =>
-      '${day(instant)} · ${DateFormat.Hm(localeName).format(instant.toUtc())} UTC';
+  String timestamp(DateTime instant) {
+    final time = DateFormat.Hm(localeName).format(instant.toUtc());
+    return '${day(instant)} · ${isolate('$time UTC')}';
+  }
 
   String volume(num count) =>
       liters(NumberFormat.decimalPattern(localeName).format(count));
@@ -43,5 +48,8 @@ extension FinanceLabels on AppLocalizations {
     OperationType.initial => initial,
   };
 }
+
+// Intl can put an RTL mark before the minus sign in Arabic currency values.
+final _directionMarks = RegExp(r'[\u061c\u200e\u200f]');
 
 String isolate(String code) => '\u2066$code\u2069';

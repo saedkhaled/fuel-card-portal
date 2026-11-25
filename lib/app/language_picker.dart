@@ -3,12 +3,14 @@ import 'package:provider/provider.dart';
 
 import '../l10n/generated/app_localizations.dart';
 import 'portal_settings.dart';
+import 'portal_surfaces.dart';
 
 Future<void> choosePortalLanguage(BuildContext context) async {
   final settings = context.read<PortalSettings>();
   final l10n = AppLocalizations.of(context)!;
   final selected = await showModalBottomSheet<Locale>(
     context: context,
+    sheetAnimationStyle: portalSheetAnimation(context),
     showDragHandle: true,
     builder: (context) => SafeArea(
       child: Padding(

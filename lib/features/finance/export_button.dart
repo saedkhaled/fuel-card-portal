@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/portal_surfaces.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'finance_export.dart';
 
@@ -22,6 +23,7 @@ class _ExportButtonState extends State<ExportButton> {
     try {
       final format = await showModalBottomSheet<FinanceExportFormat>(
         context: context,
+        sheetAnimationStyle: portalSheetAnimation(context),
         showDragHandle: true,
         builder: (context) => SafeArea(
           child: Column(

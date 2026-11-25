@@ -11,6 +11,7 @@ The slash forms below are project conventions that a Codex chat can interpret th
 | `/spec-apply fuel-card-portal step3_stations_prices` | Deliver station and bulletin journeys. |
 | `/spec-apply fuel-card-portal step4_account_services` | Deliver More, profile, subscriptions and demo services. |
 | `/spec-apply fuel-card-portal step5_android_acceptance` | Run acceptance and produce the Android APK and handoff. |
+| `/spec-apply fuel-card-portal step6_figma_redesign` | Deliver the bilingual Figma design and Flutter handoff, including the motion specification. |
 | `/spec-sync fuel-card-portal` | Reconcile package tasks, test outputs and gaps with current files. |
 | `/spec-archive fuel-card-portal` | Archive after acceptance and a final evidence review, when requested. |
 

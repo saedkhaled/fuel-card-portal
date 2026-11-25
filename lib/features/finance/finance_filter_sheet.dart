@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../app/portal_surfaces.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../cards/fleet_card.dart';
 import 'finance_labels.dart';
@@ -12,6 +13,7 @@ Future<FinanceFilter?> editFinanceFilter(
   List<FleetCard>? cards,
 }) => showModalBottomSheet<FinanceFilter>(
   context: context,
+  sheetAnimationStyle: portalSheetAnimation(context),
   showDragHandle: true,
   isScrollControlled: true,
   builder: (_) => _FilterSheet(current: current, anchor: anchor, cards: cards),

@@ -33,3 +33,12 @@ flutter:
   assets:
     - assets/demo/manifest.json
     - assets/demo/standard/
+    - assets/fonts/OFL-Cairo.txt
+    - assets/fonts/OFL-Inter.txt
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/Cairo.ttf
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter.ttf

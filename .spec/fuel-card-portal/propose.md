@@ -33,3 +33,7 @@ Estimate is 13–20 agent-hours under functioning Android tooling, with a first 
 - Release or demo APK builds, installs, and runs a recorded offline end-to-end journey. SDK, commands, artifact checksum, emulator/API, and any unverified cases are recorded.
 
 [Architecture](architecture.md) · [JSON fixture contract](fixtures.md) · [Android verification](verification.md) · [Implementation status](memory.md)
+
+## Design follow-up
+
+[Package 06](step6_figma_redesign/package.md) delivers a brand-aligned, bilingual Figma redesign and motion specification on top of the archived Android baseline. The handoff can drive a separately scoped Flutter update.

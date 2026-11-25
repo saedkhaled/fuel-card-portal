@@ -1,6 +1,10 @@
 import 'package:fleet_cards_demo/app/portal_app.dart';
 import 'package:fleet_cards_demo/demo/demo_fixtures.dart';
+import 'package:fleet_cards_demo/features/auth/session_repository.dart';
+import 'package:fleet_cards_demo/features/finance/finance_labels.dart';
+import 'package:fleet_cards_demo/l10n/generated/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'support/fixture_assets.dart';
@@ -80,6 +84,70 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Send code'), findsOneWidget);
     expect(await tester.binding.handlePopRoute(), isFalse);
+  });
+
+  testWidgets('redesigned navigation and card details fit both locales', (
+    tester,
+  ) async {
+    await tester.binding.setSurfaceSize(const Size(360, 800));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    tester.platformDispatcher.textScaleFactorTestValue = 1.3;
+    addTearDown(tester.platformDispatcher.clearTextScaleFactorTestValue);
+    addTearDown(tester.platformDispatcher.clearAccessibilityFeaturesTestValue);
+
+    final assets = FixtureAssets();
+    final loader = FixtureLoader(assets);
+    final fixtures = (await tester.runAsync(() async {
+      final standard = await FixtureLoader(rootBundle).load();
+      for (final path in [
+        FixtureLoader.manifestPath,
+        ...standard.files.values,
+      ]) {
+        assets.files[path] = await rootBundle.loadString(path);
+      }
+      return standard;
+    }))!;
+    DateTime now() => DateTime.utc(2026, 11, 25);
+    for (final (language, direction) in [
+      ('en', TextDirection.ltr),
+      ('ar', TextDirection.rtl),
+    ]) {
+      await tester.pumpWidget(const SizedBox.shrink());
+      tester.platformDispatcher.accessibilityFeaturesTestValue =
+          FakeAccessibilityFeatures(disableAnimations: language == 'ar');
+      final preferences = MemoryPreferences();
+      await preferences.write('demo.language', language);
+      final repository = FixtureSessionRepository(fixtures, preferences, now);
+      repository.request(repository.sample.phone);
+      await repository.verify(repository.sample.code);
+      await tester.pumpWidget(
+        PortalBootstrap(
+          loader: loader,
+          preferences: preferences,
+          now: now,
+          initialLocation: '/cards',
+        ),
+      );
+      await tester.pumpAndSettle();
+      final navigation = tester.element(find.byType(NavigationBar));
+      expect(Directionality.of(navigation), direction);
+      final labels = AppLocalizations.of(navigation)!;
+      expect(labels.amount(-1650000, signed: true), isolate('-16,500.00 SYP'));
+      final more = tester.getCenter(
+        find.widgetWithIcon(NavigationDestination, Icons.menu),
+      );
+      final home = tester.getCenter(
+        find.widgetWithIcon(NavigationDestination, Icons.dashboard_outlined),
+      );
+      expect(home.dx < more.dx, direction == TextDirection.ltr);
+      await tester.tap(
+        find.widgetWithText(FilledButton, labels.cardDetails).first,
+      );
+      await tester.pumpAndSettle();
+      expect(find.text(labels.financialOperations), findsOneWidget);
+      expect(find.byType(Hero), language == 'ar' ? findsNothing : findsWidgets);
+      expect(tester.takeException(), isNull);
+    }
   });
 
   testWidgets('failed startup loads after fixture is restored and retried', (

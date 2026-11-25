@@ -71,7 +71,9 @@ void main() {
     expect(find.text('Directions'), findsNothing);
 
     await tap(find.byIcon(Icons.dashboard_outlined));
-    await tap(find.text('Price bulletins'));
+    final pricesShortcut = find.text('Price bulletins');
+    await tester.scrollUntilVisible(pricesShortcut, 140);
+    await tap(pricesShortcut);
     expect(find.text('Current bulletin'), findsOneWidget);
     await tap(find.text('View bulletin'));
     expect(find.textContaining('Nov 24, 2026'), findsOneWidget);
@@ -86,11 +88,13 @@ void main() {
     await back();
 
     await tap(find.byIcon(Icons.menu));
-    await tester.scrollUntilVisible(find.text('Language'), 180);
-    await tap(find.text('Language'));
+    final language = find.text('Language').hitTestable();
+    await tester.scrollUntilVisible(language, 180);
+    await tap(language);
     await tap(find.text('العربية'));
-    await tester.scrollUntilVisible(find.text('نشرات الأسعار'), -120);
-    await tap(find.text('نشرات الأسعار'));
+    final arabicPrices = find.text('نشرات الأسعار').hitTestable();
+    await tester.scrollUntilVisible(arabicPrices, -120);
+    await tap(arabicPrices);
     expect(find.text('النشرة الحالية'), findsOneWidget);
     expect(
       Directionality.of(tester.element(find.text('النشرة الحالية'))),

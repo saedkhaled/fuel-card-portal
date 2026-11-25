@@ -23,7 +23,7 @@ The demo includes sign-in, session restoration, Home, Cards, fuel-card notes, Ba
 
 ## Build a sideload APK
 
-The verified APK is at `build/android-acceptance/fleet-cards-demo-release.apk`. It was tested on Android 7.0 (API 24) and Android 16 (API 36). See the [acceptance handoff](.spec/fuel-card-portal/step5_android_acceptance/package.md) for the checksum and device results.
+The baseline APK is at `build/android-acceptance/fleet-cards-demo-release.apk`. See the [baseline acceptance handoff](.spec/fuel-card-portal/step5_android_acceptance/package.md) for its checksum and API 24 and 36 results. See the [Flutter redesign handoff](.spec/fuel-card-portal/step6_figma_redesign/flutter-handoff.md) for the redesigned build.
 
 ```sh
 flutter pub get
@@ -32,6 +32,8 @@ adb -s <android-device-id> install -r build/app/outputs/flutter-apk/app-release.
 ```
 
 The release-mode demo uses the local Android debug key for sideloading. Use Flutter's normal build command so it regenerates the Android plugin registrant for release mode.
+
+For a branded build, pass `--dart-define-from-file=/absolute/path/to/portal-brand.json` to `flutter run` or `flutter build apk`. Keep this JSON outside the repository and set its `PORTAL_LOGO_BASE64` value to the base64-encoded bytes of an authorized transparent PNG logo. Builds without that value use the demo's own fuel icon and name. Cairo and Inter are bundled offline, with their SIL Open Font Licenses in [assets/fonts](assets/fonts).
 
 The cross-feature test resets demo state on the test app installation. Run it against a disposable Android emulator.
 

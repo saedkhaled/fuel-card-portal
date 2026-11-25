@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/language_picker.dart';
+import '../../app/portal_surfaces.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'session_controller.dart';
 
@@ -39,7 +40,18 @@ class _SignInPageState extends State<SignInPage> {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(l10n.appTitle),
+        title: Row(
+          children: [
+            const PortalMark(),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                PortalMark.hasBrandArtwork ? l10n.portalBrand : l10n.appTitle,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             tooltip: l10n.language,
@@ -226,13 +238,12 @@ class _AuthBody extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: CircleAvatar(
-                    radius: 28,
-                    backgroundColor: theme.colorScheme.primaryContainer,
-                    foregroundColor: theme.colorScheme.onPrimaryContainer,
-                    child: Icon(icon, size: 28),
+                PortalHeroSurface(
+                  child: Align(
+                    alignment: AlignmentDirectional.centerStart,
+                    child: icon == Icons.local_gas_station_outlined
+                        ? const PortalMark(size: 48)
+                        : Icon(icon, size: 42),
                   ),
                 ),
                 const SizedBox(height: 20),

@@ -7,6 +7,8 @@ import '../features/notifications/inbox_controller.dart';
 import '../features/home/fleet_home.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'portal_destinations.dart';
+import 'portal_surfaces.dart';
+import 'portal_theme.dart';
 
 enum PortalTab {
   home('/home', Icons.dashboard_outlined),
@@ -39,7 +41,23 @@ class PortalShell extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: Text(PortalTab.values[navigation.currentIndex].title(l10n)),
+        title: Row(
+          children: [
+            const PortalMark(),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                navigation.currentIndex == PortalTab.home.index
+                    ? (PortalMark.hasBrandArtwork
+                          ? l10n.portalBrand
+                          : l10n.appTitle)
+                    : PortalTab.values[navigation.currentIndex].title(l10n),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
         actions: [
           IconButton(
             tooltip: l10n.notifications,
@@ -49,17 +67,55 @@ class PortalShell extends StatelessWidget {
         ],
       ),
       body: SafeArea(top: false, child: navigation),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigation.currentIndex,
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        onDestinationSelected: (index) => navigation.goBranch(
-          index,
-          initialLocation: index == navigation.currentIndex,
+      bottomNavigationBar: DecoratedBox(
+        decoration: const BoxDecoration(
+          border: Border(top: BorderSide(color: portalLine)),
         ),
-        destinations: [
-          for (final tab in PortalTab.values)
-            NavigationDestination(icon: Icon(tab.icon), label: tab.title(l10n)),
-        ],
+        child: NavigationBar(
+          height:
+              68 +
+              (MediaQuery.textScalerOf(context).scale(11) - 11).clamp(
+                    0.0,
+                    28.0,
+                  ) *
+                  2,
+          selectedIndex: navigation.currentIndex,
+          animationDuration: MediaQuery.disableAnimationsOf(context)
+              ? Duration.zero
+              : const Duration(milliseconds: 140),
+          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          onDestinationSelected: (index) => navigation.goBranch(
+            index,
+            initialLocation: index == navigation.currentIndex,
+          ),
+          destinations: [
+            for (final tab in PortalTab.values)
+              NavigationDestination(
+                icon: Icon(tab.icon, color: portalMuted),
+                selectedIcon: Stack(
+                  alignment: Alignment.topCenter,
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(tab.icon, color: portalNavy),
+                    const Positioned(
+                      top: -9,
+                      child: SizedBox(
+                        width: 25,
+                        height: 3,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: portalGold,
+                            borderRadius: BorderRadius.all(Radius.circular(2)),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                label: tab.title(l10n),
+              ),
+          ],
+        ),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../../app/android_file_actions.dart';
 import '../../app/language_picker.dart';
 import '../../app/portal_destinations.dart';
+import '../../app/portal_surfaces.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../auth/session_controller.dart';
 import '../finance/finance_labels.dart';
@@ -68,35 +69,30 @@ class AccountPage extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        Card(
-          margin: EdgeInsets.zero,
-          color: theme.colorScheme.primaryContainer,
-          child: Padding(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.business_outlined),
-                const SizedBox(height: 8),
-                Text(
-                  profile.company.inLanguage(labels.localeName),
-                  style: theme.textTheme.headlineSmall,
+        PortalHeroSurface(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Icon(Icons.business_outlined),
+              const SizedBox(height: 8),
+              Text(
+                profile.company.inLanguage(labels.localeName),
+                style: theme.textTheme.headlineSmall!.copyWith(
+                  color: Colors.white,
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  '${labels.city} · ${profile.city.inLanguage(labels.localeName)}',
-                ),
-                Text(
-                  '${labels.registration} · ${isolate(profile.registration)}',
-                ),
-                Text('${labels.cardCount} · $cardCount'),
-                Text(
-                  '${labels.contact} · ${profile.contact.name.inLanguage(labels.localeName)}',
-                ),
-                Text(isolate(profile.contact.phone)),
-                Text(isolate(profile.contact.email)),
-              ],
-            ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${labels.city} · ${profile.city.inLanguage(labels.localeName)}',
+              ),
+              Text('${labels.registration} · ${isolate(profile.registration)}'),
+              Text('${labels.cardCount} · $cardCount'),
+              Text(
+                '${labels.contact} · ${profile.contact.name.inLanguage(labels.localeName)}',
+              ),
+              Text(isolate(profile.contact.phone)),
+              Text(isolate(profile.contact.email)),
+            ],
           ),
         ),
         _SectionTitle(labels.services),

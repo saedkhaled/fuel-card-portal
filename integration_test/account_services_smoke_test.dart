@@ -29,9 +29,15 @@ void main() {
     }
 
     Future<void> tile(String name, {double delta = 150}) async {
-      final target = find.widgetWithText(ListTile, name);
+      final target = find.widgetWithText(ListTile, name).hitTestable();
       await tester.scrollUntilVisible(target, delta);
       await tap(target);
+    }
+
+    Future<void> expectUnreadActivity() async {
+      final unread = find.text('Unread · 1').hitTestable();
+      await tester.scrollUntilVisible(unread, 145);
+      expect(unread, findsOneWidget);
     }
 
     await tap(find.byTooltip('اللغة'));
@@ -41,7 +47,7 @@ void main() {
     await tester.enterText(find.byKey(const Key('code-field')), sample.code);
     await tester.pumpAndSettle();
     await tap(find.text('Not now'));
-    expect(find.text('Unread · 1'), findsOneWidget);
+    await expectUnreadActivity();
     await tap(find.byIcon(Icons.menu));
     expect(find.text('Cedar Fleet Logistics'), findsOneWidget);
     await tile('Monthly subscription');
@@ -62,14 +68,14 @@ void main() {
 
     await tile('Top up balance');
     expect(find.text('Demo transfer QR'), findsOneWidget);
-    final copyDestination = find.byTooltip('Copy destination');
+    final copyDestination = find.byTooltip('Copy destination').hitTestable();
     await tester.scrollUntilVisible(copyDestination, 150);
     await tap(copyDestination);
     expect(
       (await Clipboard.getData(Clipboard.kTextPlain))?.text,
       'DEMO-TRANSFER-104',
     );
-    final copyNote = find.byTooltip('Copy transfer note');
+    final copyNote = find.byTooltip('Copy transfer note').hitTestable();
     await tester.scrollUntilVisible(copyNote, 150);
     await tap(copyNote);
     expect(
@@ -97,9 +103,9 @@ void main() {
     expect(find.byTooltip('Mark as read'), findsOneWidget);
     await back();
     await tap(find.byIcon(Icons.dashboard_outlined));
-    expect(find.text('Unread · 1'), findsOneWidget);
+    await expectUnreadActivity();
     final viewAll = find.widgetWithText(TextButton, 'View all').hitTestable();
-    await tester.scrollUntilVisible(viewAll, 145);
+    await tester.scrollUntilVisible(viewAll, -145);
     await tap(viewAll);
     expect(find.text('Fuel prices updated'), findsOneWidget);
     await back();

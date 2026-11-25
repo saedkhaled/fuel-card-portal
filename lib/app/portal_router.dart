@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/account/account_pages.dart';
@@ -45,8 +46,22 @@ GoRouter createPortalRouter(
       ),
       GoRoute(
         path: '/card/:cardId',
-        builder: (_, state) =>
-            CardDetailsPage(id: state.pathParameters['cardId']!),
+        pageBuilder: (context, state) {
+          final reduceMotion = MediaQuery.disableAnimationsOf(context);
+          final duration = reduceMotion
+              ? Duration.zero
+              : const Duration(milliseconds: 260);
+          return CustomTransitionPage<void>(
+            key: state.pageKey,
+            transitionDuration: duration,
+            reverseTransitionDuration: duration,
+            child: CardDetailsPage(id: state.pathParameters['cardId']!),
+            transitionsBuilder: (_, animation, _, child) => FadeTransition(
+              opacity: animation.drive(CurveTween(curve: Curves.easeInOut)),
+              child: child,
+            ),
+          );
+        },
       ),
       GoRoute(
         path: '/card/:cardId/operations',

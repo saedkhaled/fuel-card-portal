@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../app/portal_destinations.dart';
+import '../../app/portal_surfaces.dart';
+import '../../app/portal_theme.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../finance/export_button.dart';
 import '../finance/finance_labels.dart';
@@ -44,6 +46,10 @@ class _CardsPageState extends State<CardsPage> {
                   decoration: InputDecoration(
                     labelText: labels.searchCards,
                     prefixIcon: const Icon(Icons.search),
+                    floatingLabelBehavior:
+                        MediaQuery.textScalerOf(context).scale(16) > 18
+                        ? FloatingLabelBehavior.always
+                        : FloatingLabelBehavior.auto,
                   ),
                   onChanged: (value) => setState(() => _query = value),
                 ),
@@ -92,7 +98,7 @@ class _CardsPageState extends State<CardsPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _CardSummary(
+                            _CardTransition(
                               card: card,
                               amount: data.balance(card.id),
                             ),
@@ -152,16 +158,7 @@ class _CardDetailsPageState extends State<CardDetailsPage> {
             : ListView(
                 padding: const EdgeInsets.all(16),
                 children: [
-                  Card(
-                    margin: EdgeInsets.zero,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: _CardSummary(
-                        card: card,
-                        amount: data.balance(card.id),
-                      ),
-                    ),
-                  ),
+                  _CardTransition(card: card, amount: data.balance(card.id)),
                   const SizedBox(height: 12),
                   SegmentedButton<bool>(
                     showSelectedIcon: false,
@@ -214,6 +211,31 @@ class _CardDetailsPageState extends State<CardDetailsPage> {
   }
 }
 
+class _CardTransition extends StatelessWidget {
+  const _CardTransition({required this.card, required this.amount});
+
+  final FleetCard card;
+  final int amount;
+
+  @override
+  Widget build(BuildContext context) {
+    final summary = _CardSummary(card: card, amount: amount);
+    if (MediaQuery.disableAnimationsOf(context)) return summary;
+    return Hero(
+      tag: 'fuel-card-${card.id}',
+      flightShuttleBuilder: (_, _, _, _, destination) {
+        final hero = destination.widget as Hero;
+        final bounds = destination.findRenderObject()! as RenderBox;
+        return FittedBox(
+          fit: BoxFit.fill,
+          child: SizedBox.fromSize(size: bounds.size, child: hero.child),
+        );
+      },
+      child: summary,
+    );
+  }
+}
+
 class _CardSummary extends StatelessWidget {
   const _CardSummary({required this.card, required this.amount});
 
@@ -225,39 +247,59 @@ class _CardSummary extends StatelessWidget {
     final labels = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final active = card.status == CardStatus.active;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Wrap(
-          spacing: 12,
-          runSpacing: 6,
-          crossAxisAlignment: WrapCrossAlignment.center,
+    return Material(
+      type: MaterialType.transparency,
+      child: PortalHeroSurface(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(isolate(card.number), style: theme.textTheme.titleLarge),
-            Chip(
-              avatar: Icon(
-                active
-                    ? Icons.check_circle_outline
-                    : Icons.pause_circle_outline,
-                size: 18,
-              ),
-              label: Text(labels.cardStatus(card.status)),
-              visualDensity: VisualDensity.compact,
+            Wrap(
+              spacing: 10,
+              runSpacing: 4,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text(
+                  isolate(card.number),
+                  style: theme.textTheme.titleLarge!.copyWith(
+                    color: Colors.white,
+                  ),
+                ),
+                Chip(
+                  backgroundColor: active
+                      ? const Color(0xffe1f4ea)
+                      : const Color(0xffffe8e8),
+                  avatar: Icon(
+                    active
+                        ? Icons.check_circle_outline
+                        : Icons.pause_circle_outline,
+                    color: active
+                        ? const Color(0xff176344)
+                        : const Color(0xffa82e3a),
+                    size: 16,
+                  ),
+                  label: Text(labels.cardStatus(card.status)),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
             ),
+            Text('${labels.plate} · ${isolate(card.plate)}'),
+            const SizedBox(height: 5),
+            Text(
+              '${labels.fuelProduct(card.product)} · ${labels.volume(card.quotaLiters)}',
+            ),
+            const SizedBox(height: 4),
+            Text(
+              labels.amount(amount),
+              style: theme.textTheme.titleMedium!.copyWith(
+                color: portalGold,
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+            if (card.activatedAt == null) Text(labels.notActivated),
           ],
         ),
-        Text('${labels.plate} · ${isolate(card.plate)}'),
-        const SizedBox(height: 8),
-        Text(
-          '${labels.fuelProduct(card.product)} · ${labels.volume(card.quotaLiters)}',
-        ),
-        Text(labels.amount(amount), style: theme.textTheme.titleMedium),
-        if (card.activatedAt == null)
-          Padding(
-            padding: const EdgeInsets.only(top: 6),
-            child: Text(labels.notActivated, style: theme.textTheme.bodySmall),
-          ),
-      ],
+      ),
     );
   }
 }

@@ -1,6 +1,7 @@
 {
   "@@locale": "en",
   "appTitle": "Fleet Cards Demo",
+  "portalBrand": "Golden Gate",
   "language": "Language",
   "chooseLanguage": "Choose language",
   "signIn": "Sign in",

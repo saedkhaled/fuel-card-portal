@@ -1,8 +1,11 @@
 # Fuel-card portal execution memory
 
-Archived 25 November 2026 · [Closeout and verification record](archive.md)
+Android baseline archived 25 November 2026 · [Closeout and verification record](archive.md)
 
 ## Current state
+
+- The Flutter redesign is applied and verified on Android 16 in English and Arabic. All 27 local tests and five Android integration tests passed. The branded APK and implementation evidence are recorded in the [Flutter handoff](step6_figma_redesign/flutter-handoff.md#flutter-implementation-evidence).
+- 06 Figma redesign and design handoff are complete. The user confirmed that the existing prototype examples are optional. The Flutter handoff records the Android implementation and accessibility checks. [Design and evidence](step6_figma_redesign/package.md#implementation-evidence)
 
 - 05 Android acceptance completed. The development-signed release-mode APK is `build/android-acceptance/fleet-cards-demo-release.apk`. All 26 local and five Android integration tests passed. The exact APK passed the installed walkthrough on API 36 and the fresh offline sign-in smoke check on API 24. The handoff records the TalkBack spot check and its scope. [Acceptance evidence](step5_android_acceptance/package.md#artifact-and-verification-evidence)
 
@@ -26,6 +29,7 @@ Archived 25 November 2026 · [Closeout and verification record](archive.md)
 | [03 Stations and prices](step3_stations_prices/package.md) | Complete | [Stations and prices evidence](step3_stations_prices/package.md#evidence-and-downstream-contract) |
 | [04 Account services](step4_account_services/package.md) | Complete | [Account services evidence](step4_account_services/package.md#evidence-and-downstream-contract) |
 | [05 Android acceptance](step5_android_acceptance/package.md) | Complete | [Release and verification](step5_android_acceptance/package.md#artifact-and-verification-evidence), [R01–R23 coverage](step5_android_acceptance/coverage.md) |
+| [06 Figma redesign](step6_figma_redesign/package.md) | Complete | [Evidence](step6_figma_redesign/package.md#implementation-evidence), [Flutter handoff](step6_figma_redesign/flutter-handoff.md) |
 
 ## Decisions and anchors
 
@@ -37,4 +41,4 @@ Archived 25 November 2026 · [Closeout and verification record](archive.md)
 
 ## Closure
 
-All five packages are complete and the specification is archived in place. Record new scope through `/spec-propose fuel-card-portal`.
+Packages 01–05 are complete and archived in place. Package 06 and its Flutter implementation handoff are complete. Record new scope through `/spec-propose fuel-card-portal`.

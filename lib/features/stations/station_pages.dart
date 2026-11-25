@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app/portal_destinations.dart';
+import '../../app/portal_surfaces.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../cards/fleet_card.dart';
 import 'network_content.dart';
@@ -29,6 +30,7 @@ class _StationsPageState extends State<StationsPage> {
     _searchFocus.unfocus();
     final selected = await showModalBottomSheet<StationFilter>(
       context: context,
+      sheetAnimationStyle: portalSheetAnimation(context),
       showDragHandle: true,
       requestFocus: false,
       isScrollControlled: true,
@@ -255,22 +257,19 @@ class StationDetailsPage extends StatelessWidget {
             return ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                Card(
-                  margin: EdgeInsets.zero,
-                  color: theme.colorScheme.primaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.local_gas_station_outlined),
-                        const SizedBox(height: 10),
-                        Text(
-                          station.name.inLanguage(labels.localeName),
-                          style: theme.textTheme.headlineSmall,
+                PortalHeroSurface(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.local_gas_station_outlined),
+                      const SizedBox(height: 10),
+                      Text(
+                        station.name.inLanguage(labels.localeName),
+                        style: theme.textTheme.headlineSmall!.copyWith(
+                          color: Colors.white,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 ListTile(

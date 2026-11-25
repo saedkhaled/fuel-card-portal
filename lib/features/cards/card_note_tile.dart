@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../app/portal_surfaces.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'card_notes.dart';
 import 'fleet_card.dart';
@@ -37,6 +38,7 @@ class CardNoteTile extends StatelessWidget {
           trailing: const Icon(Icons.edit_outlined),
           onTap: () => showModalBottomSheet<void>(
             context: context,
+            sheetAnimationStyle: portalSheetAnimation(context),
             isScrollControlled: true,
             showDragHandle: true,
             builder: (_) => _EditNote(card: card, store: store, original: note),
