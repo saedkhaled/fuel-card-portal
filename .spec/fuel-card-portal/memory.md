@@ -1,6 +1,6 @@
 # Fuel-card portal execution memory
 
-Updated 25 November 2026
+Archived 25 November 2026 · [Closeout and verification record](archive.md)
 
 ## Current state
 
@@ -35,8 +35,6 @@ Updated 25 November 2026
 - [Architecture](architecture.md) defines proposed contracts and fixtures. Each package translates them into implementation and exit checks.
 - When a follow-up changes scope or acceptance, record its effect in the relevant package and include the command, device and API when applicable, input state, result, and artifact checksum.
 
-## Next chat command
+## Closure
 
-```text
-/spec-archive fuel-card-portal
-```
+All five packages are complete and the specification is archived in place. Record new scope through `/spec-propose fuel-card-portal`.
