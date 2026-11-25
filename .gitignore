@@ -7,3 +7,12 @@ key.properties
 .env
 .env.*
 !.env.example
+
+# Flutter and local IDE files
+.dart_tool/
+.flutter-plugins-dependencies
+.idea/
+*.iml
+/build/
+/coverage/
+/lib/l10n/generated/

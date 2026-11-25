@@ -1,6 +1,6 @@
 # Package 04 · Account services
 
-Status awaiting 01 and card contract from 02 · Estimate 3–4 h
+Status Ready · Card contract from 02 available · Estimate 3–4 h
 
 ## Objective and ownership
 

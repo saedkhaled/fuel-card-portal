@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "defaultScenario": "standard",
+  "scenarios": {
+    "standard": {
+      "files": {
+        "auth": "assets/demo/standard/auth.json"
+      }
+    },
+    "recoverable_error": {
+      "files": {
+        "auth": "assets/demo/standard/auth.json"
+      },
+      "failOnce": "requestCode"
+    }
+  }
+}

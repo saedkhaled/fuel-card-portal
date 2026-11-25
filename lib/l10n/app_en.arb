@@ -1,0 +1,81 @@
+{
+  "@@locale": "en",
+  "appTitle": "Fleet Cards Demo",
+  "language": "Language",
+  "chooseLanguage": "Choose language",
+  "signIn": "Sign in",
+  "signInHeading": "Your fleet, in one place",
+  "signInHelp": "Enter your mobile number to get a demo verification code.",
+  "signInRecovery": "For help with demo access, contact your fleet administrator.",
+  "phoneLabel": "Mobile number",
+  "sendCode": "Send code",
+  "demoPhone": "Demo number: {phone}",
+  "demoCode": "Demo code: {code}",
+  "invalidPhone": "Enter 10 digits starting with 09.",
+  "unknownPhone": "This number is unavailable in the demo.",
+  "requestFailed": "The demo could not issue a code. Try again.",
+  "verifyHeading": "Check your code",
+  "verifyHelp": "Enter the six-digit code for {phone}.",
+  "codeLabel": "Verification code",
+  "confirmCode": "Confirm code",
+  "codeExpires": "Code expires in {remaining}",
+  "resendIn": "Resend in {remaining}",
+  "resendCode": "Resend code",
+  "invalidCode": "That code does not match. Try again.",
+  "expiredCode": "This code expired. Request a new one.",
+  "operationFailed": "Could not save the change. Try again.",
+  "home": "Home",
+  "cards": "Cards",
+  "balances": "Balances",
+  "stations": "Stations",
+  "more": "More",
+  "homeHeading": "Fleet overview",
+  "sessionActive": "You are signed in to the offline demo.",
+  "sectionPending": "This section is awaiting implementation.",
+  "alertHeading": "Station alerts",
+  "alertHelp": "Enable simulated fuel availability alerts in the demo.",
+  "enableAlerts": "Enable alerts",
+  "notNow": "Not now",
+  "logout": "Sign out",
+  "logoutQuestion": "Sign out of the demo?",
+  "cancel": "Cancel",
+  "startupError": "The demo data could not be loaded.",
+  "retry": "Try again",
+  "@demoPhone": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "@demoCode": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "@verifyHelp": {
+    "placeholders": {
+      "phone": {
+        "type": "String"
+      }
+    }
+  },
+  "@codeExpires": {
+    "placeholders": {
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
+  "@resendIn": {
+    "placeholders": {
+      "remaining": {
+        "type": "String"
+      }
+    }
+  },
+  "notifications": "Notifications",
+  "noNotifications": "No notifications yet."
+}

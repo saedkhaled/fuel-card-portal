@@ -1,6 +1,6 @@
 # Package 05 · Android acceptance
 
-Status awaiting 02–04 · Estimate 2–4 h
+Status awaiting 03–04 · Estimate 2–4 h
 
 ## Objective and ownership
 

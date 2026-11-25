@@ -1,6 +1,6 @@
 # Package 03 · Stations and prices
 
-Status awaiting 01 · Estimate 2–3 h
+Status Ready · Dependency 01 complete · Estimate 2–3 h
 
 ## Objective and ownership
 
