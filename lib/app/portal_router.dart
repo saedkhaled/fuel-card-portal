@@ -3,6 +3,9 @@ import 'package:go_router/go_router.dart';
 
 import '../features/auth/auth_pages.dart';
 import '../features/auth/session_controller.dart';
+import '../features/cards/cards_pages.dart';
+import '../features/finance/finance_pages.dart';
+import '../features/finance/finance_widgets.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'portal_destinations.dart';
 import 'portal_shell.dart';
@@ -39,12 +42,36 @@ GoRouter createPortalRouter(
         ],
       ),
       GoRoute(
+        path: '/card/:cardId',
+        builder: (_, state) =>
+            CardDetailsPage(id: state.pathParameters['cardId']!),
+      ),
+      GoRoute(
+        path: '/card/:cardId/operations',
+        builder: (_, state) =>
+            OperationsPage(cardId: state.pathParameters['cardId']!),
+      ),
+      GoRoute(
+        path: PortalDestinations.sales,
+        builder: (_, _) => const SalesPage(),
+      ),
+      GoRoute(
+        path: PortalDestinations.prices,
+        builder: (context, _) {
+          final labels = AppLocalizations.of(context)!;
+          return Scaffold(
+            appBar: AppBar(title: Text(labels.priceBulletins)),
+            body: EmptyFinance(labels.sectionPending),
+          );
+        },
+      ),
+      GoRoute(
         path: PortalDestinations.notifications,
         builder: (context, _) {
           final labels = AppLocalizations.of(context)!;
           return Scaffold(
             appBar: AppBar(title: Text(labels.notifications)),
-            body: Center(child: Text(labels.noNotifications)),
+            body: EmptyFinance(labels.noNotifications),
           );
         },
       ),
@@ -59,8 +86,8 @@ GoRouter createPortalRouter(
                   builder: (_, _) => switch (tab) {
                     PortalTab.home => const FoundationHome(),
                     PortalTab.more => const FoundationMore(),
-                    PortalTab.cards ||
-                    PortalTab.balances ||
+                    PortalTab.cards => const CardsPage(),
+                    PortalTab.balances => const BalancesPage(),
                     PortalTab.stations => PendingTab(tab: tab),
                   },
                 ),

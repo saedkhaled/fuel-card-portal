@@ -1,0 +1,64 @@
+{
+  "cards": [
+    {
+      "id": "fc-101",
+      "accountId": "demo-fleet",
+      "number": "FC-0101",
+      "plate": "DAM 1284",
+      "status": "active",
+      "productId": "diesel",
+      "plan": "monthly",
+      "quotaLiters": 450,
+      "createdAt": "2026-10-05T08:00:00Z",
+      "activatedAt": "2026-10-12T08:00:00Z",
+      "rfid": "D-2048",
+      "deliveredAt": "2026-10-12T08:00:00Z",
+      "note": "North route"
+    },
+    {
+      "id": "fc-102",
+      "accountId": "demo-fleet",
+      "number": "FC-0102",
+      "plate": "ALP 3651",
+      "status": "active",
+      "productId": "benzene",
+      "plan": "monthly",
+      "quotaLiters": 250,
+      "createdAt": "2026-10-05T08:00:00Z",
+      "activatedAt": "2026-10-17T09:00:00Z",
+      "rfid": null,
+      "deliveredAt": "2026-10-17T09:00:00Z",
+      "note": null
+    },
+    {
+      "id": "fc-103",
+      "accountId": "demo-fleet",
+      "number": "FC-0103",
+      "plate": "HMS 4902",
+      "status": "stopped",
+      "productId": "diesel",
+      "plan": "monthly",
+      "quotaLiters": 300,
+      "createdAt": "2026-10-05T08:00:00Z",
+      "activatedAt": null,
+      "rfid": null,
+      "deliveredAt": null,
+      "note": null
+    },
+    {
+      "id": "fc-104",
+      "accountId": "demo-fleet",
+      "number": "FC-0104",
+      "plate": "DAM 2775",
+      "status": "active",
+      "productId": "premium",
+      "plan": "monthly",
+      "quotaLiters": 180,
+      "createdAt": "2026-10-05T08:00:00Z",
+      "activatedAt": "2026-11-02T09:00:00Z",
+      "rfid": null,
+      "deliveredAt": null,
+      "note": null
+    }
+  ]
+}

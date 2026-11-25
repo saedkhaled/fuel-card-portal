@@ -66,10 +66,7 @@ void main() {
     await tester.pumpWidget(const SizedBox.shrink());
     await open();
     expect(find.byKey(phone), findsNothing);
-    expect(
-      find.text('This section is awaiting implementation.'),
-      findsOneWidget,
-    );
+    expect(find.text('Search card number or plate'), findsOneWidget);
     await tester.tap(find.byIcon(Icons.menu));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Sign out'));

@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import '../demo/demo_fixtures.dart';
 import '../features/auth/session_controller.dart';
 import '../features/auth/session_repository.dart';
+import '../features/cards/card_notes.dart';
+import '../features/finance/fleet_data.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'demo_preferences.dart';
 import 'portal_router.dart';
@@ -36,8 +38,10 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
 
   Future<_Startup> _load() async {
     final DemoFixtures fixtures;
+    final FleetData fleet;
     try {
       fixtures = await widget.loader.load(scenario: widget.scenario);
+      fleet = await FleetData.load(widget.loader, fixtures);
     } on FixtureException catch (error) {
       debugPrint(error.toString());
       rethrow;
@@ -50,6 +54,7 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
     );
     return _Startup(
       fixtures: fixtures,
+      fleet: fleet,
       repository: repository,
       accountId: await repository.restore(),
       language: await preferences.read(PortalSettings.languageKey),
@@ -111,12 +116,14 @@ class _PortalBootstrapState extends State<PortalBootstrap> {
 class _Startup {
   const _Startup({
     required this.fixtures,
+    required this.fleet,
     required this.repository,
     required this.accountId,
     required this.language,
   });
 
   final DemoFixtures fixtures;
+  final FleetData fleet;
   final SessionRepository repository;
   final String? accountId;
   final String? language;
@@ -142,6 +149,7 @@ class _PortalApp extends StatefulWidget {
 class _PortalAppState extends State<_PortalApp> {
   late final SessionController _session;
   late final PortalSettings _settings;
+  late final CardNotes _notes;
   late final GoRouter _router;
 
   @override
@@ -149,6 +157,7 @@ class _PortalAppState extends State<_PortalApp> {
     super.initState();
     final startup = widget.startup;
     _session = SessionController(startup.repository, startup.accountId);
+    _notes = CardNotes(widget.preferences, startup.fixtures.scenario);
     _settings = PortalSettings(
       widget.preferences,
       startup.fixtures.scenario,
@@ -166,6 +175,7 @@ class _PortalAppState extends State<_PortalApp> {
     _router.dispose();
     _session.dispose();
     _settings.dispose();
+    _notes.dispose();
     super.dispose();
   }
 
@@ -173,6 +183,8 @@ class _PortalAppState extends State<_PortalApp> {
   Widget build(BuildContext context) => MultiProvider(
     providers: [
       Provider.value(value: widget.startup.fixtures),
+      Provider.value(value: widget.startup.fleet),
+      ChangeNotifierProvider.value(value: _notes),
       ChangeNotifierProvider.value(value: _session),
       ChangeNotifierProvider.value(value: _settings),
     ],

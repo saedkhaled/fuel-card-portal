@@ -32,10 +32,7 @@ void main() {
     expect(find.text('Fleet overview'), findsOneWidget);
     await tester.tap(find.byIcon(Icons.credit_card_outlined));
     await tester.pumpAndSettle();
-    expect(
-      find.text('This section is awaiting implementation.'),
-      findsOneWidget,
-    );
+    expect(find.text('Search card number or plate'), findsOneWidget);
     await tester.tap(find.byIcon(Icons.dashboard_outlined));
     await tester.pumpAndSettle();
     expect(find.text('Fleet overview'), findsOneWidget);

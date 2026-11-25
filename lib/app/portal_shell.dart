@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../features/auth/session_controller.dart';
+import '../features/home/fleet_home.dart';
 import '../l10n/generated/app_localizations.dart';
 import 'language_picker.dart';
 import 'portal_settings.dart';
@@ -116,19 +117,7 @@ class _FoundationHomeState extends State<FoundationHome> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final labels = AppLocalizations.of(context)!;
-    return ListView(
-      padding: const EdgeInsets.all(16),
-      children: [
-        Text(
-          labels.homeHeading,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        Text(labels.sessionActive),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => const FleetHome();
 }
 
 class FoundationMore extends StatelessWidget {
@@ -169,6 +158,11 @@ class FoundationMore extends StatelessWidget {
           leading: const Icon(Icons.language),
           title: Text(l10n.language),
           onTap: () => choosePortalLanguage(context),
+        ),
+        ListTile(
+          leading: const Icon(Icons.receipt_long_outlined),
+          title: Text(l10n.sales),
+          onTap: () => context.push(PortalDestinations.sales),
         ),
         ListTile(
           leading: const Icon(Icons.logout),

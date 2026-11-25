@@ -1,0 +1,139 @@
+{
+  "currency": "SYP",
+  "minorDigits": 2,
+  "clockAnchor": "2026-11-29T12:00:00Z",
+  "balances": [
+    {
+      "cardId": "fc-101",
+      "amountMinor": 18645000
+    },
+    {
+      "cardId": "fc-102",
+      "amountMinor": 9620000
+    },
+    {
+      "cardId": "fc-103",
+      "amountMinor": 0
+    },
+    {
+      "cardId": "fc-104",
+      "amountMinor": 9780000
+    }
+  ],
+  "operations": [
+    {
+      "id": "op-001",
+      "cardId": "fc-101",
+      "type": "refill",
+      "at": "2026-11-25T09:12:00Z",
+      "amountMinor": -1650000
+    },
+    {
+      "id": "op-002",
+      "cardId": "fc-101",
+      "type": "deposit",
+      "at": "2026-11-24T09:13:00Z",
+      "amountMinor": 10000000
+    },
+    {
+      "id": "op-003",
+      "cardId": "fc-102",
+      "type": "withdraw",
+      "at": "2026-11-24T09:14:00Z",
+      "amountMinor": -200000
+    },
+    {
+      "id": "op-004",
+      "cardId": "fc-101",
+      "type": "subscription",
+      "at": "2026-11-17T09:15:00Z",
+      "amountMinor": -450000
+    },
+    {
+      "id": "op-005",
+      "cardId": "fc-103",
+      "type": "forfeiture",
+      "at": "2026-11-12T09:16:00Z",
+      "amountMinor": -300000
+    },
+    {
+      "id": "op-006",
+      "cardId": "fc-101",
+      "type": "initial",
+      "at": "2026-11-06T09:17:00Z",
+      "amountMinor": 13500000
+    },
+    {
+      "id": "op-007",
+      "cardId": "fc-102",
+      "type": "refill",
+      "at": "2026-11-23T09:18:00Z",
+      "amountMinor": -860000
+    },
+    {
+      "id": "op-008",
+      "cardId": "fc-104",
+      "type": "deposit",
+      "at": "2026-11-25T09:19:00Z",
+      "amountMinor": 2500000
+    },
+    {
+      "id": "op-009",
+      "cardId": "fc-104",
+      "type": "subscription",
+      "at": "2026-11-19T09:20:00Z",
+      "amountMinor": -350000
+    }
+  ],
+  "stations": [
+    {
+      "id": "dam-depot",
+      "name": {
+        "en": "South Depot",
+        "ar": "محطة المستودع الجنوبي"
+      }
+    },
+    {
+      "id": "hms-junction",
+      "name": {
+        "en": "Junction Station",
+        "ar": "محطة التقاطع"
+      }
+    }
+  ],
+  "sales": [
+    {
+      "id": "sale-001",
+      "receipt": "RC-3104",
+      "cardId": "fc-101",
+      "productId": "diesel",
+      "stationId": "dam-depot",
+      "at": "2026-11-25T09:12:00Z",
+      "quantityLiters": 33,
+      "unitPriceMinor": 50000,
+      "totalMinor": 1650000
+    },
+    {
+      "id": "sale-002",
+      "receipt": "RC-3091",
+      "cardId": "fc-102",
+      "productId": "benzene",
+      "stationId": "hms-junction",
+      "at": "2026-11-23T09:18:00Z",
+      "quantityLiters": 20,
+      "unitPriceMinor": 43000,
+      "totalMinor": 860000
+    },
+    {
+      "id": "sale-003",
+      "receipt": "RC-2942",
+      "cardId": "fc-104",
+      "productId": "premium",
+      "stationId": "dam-depot",
+      "at": "2026-11-19T10:17:00Z",
+      "quantityLiters": 24.5,
+      "unitPriceMinor": 60000,
+      "totalMinor": 1470000
+    }
+  ]
+}

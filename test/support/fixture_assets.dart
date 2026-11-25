@@ -7,9 +7,12 @@ class FixtureAssets extends CachingAssetBundle {
   final files = <String, String>{
     FixtureLoader.manifestPath: '''
       {"schemaVersion":1,"defaultScenario":"standard","scenarios":{
-        "standard":{"files":{"auth":"assets/demo/standard/auth.json"}}
+        "standard":{"files":{"auth":"assets/demo/standard/auth.json","cards":"assets/demo/standard/cards.json","finance":"assets/demo/standard/finance.json"}}
       }}
       ''',
+    'assets/demo/standard/cards.json': '{"cards":[]}',
+    'assets/demo/standard/finance.json':
+        '{"currency":"SYP","minorDigits":2,"clockAnchor":"2026-11-25T12:00:00Z","balances":[],"operations":[],"sales":[],"stations":[]}',
     authPath: '''
       {"validitySeconds":300,"resendSeconds":60,"accounts":[
         {"id":"fleet","phone":"0900000000","code":"246810"}
