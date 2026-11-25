@@ -39,7 +39,7 @@ void main() {
         'stations',
       ),
       'وين محطات الوقود في حمص؟': ('company-stations-homs', 'stations'),
-      'محطة ٤٧': ('company-stations-deir-ez-zor', 'stations'),
+      'محطة ٤٧': ('guide-station-18', 'stations'),
       'توفر البنزين اليوم': ('company-live-stocks', 'stations'),
       'كيف بطلب مازوت لمعملي؟': ('company-facility-request', 'facility-supply'),
       'سعر الوقود للمنشآت': ('company-facility-pricing', 'facility-supply'),
@@ -51,6 +51,45 @@ void main() {
       expect(answer?.sourceUrl, Uri.parse('https://goldengate.sy/#$section'));
       expect(answer?.route, isNull);
     }
+  });
+
+  test('ranks guide passages for wording absent from the catalog', () {
+    final catalog = SupportCatalog.fromJson(sampleCatalog());
+    final cases = {
+      'من وين بقدر استلم كرتي الجديد؟': 'company-card-contact',
+      'حوالتي تأخرت، قديش بتاخد لينضاف المبلغ؟': 'guide-transfer-time',
+      'إذا بعت حوالة شام كاش إمتى بيظهر الرصيد؟': 'guide-transfer-time',
+      'هل يوجد مازوت في حسياء؟': 'guide-station-05',
+      'قديش قيمتها رسوم الكرت الشهرية؟': 'guide-subscription',
+      'إذا ما سددت اشتراكي بتوقف بطاقتي؟': 'guide-subscription-suspension',
+      'وين موقع الشيخ نجار بالضبط؟': 'guide-station-01',
+      'شو البنزين اللي مدرج عند دوار القلعة؟': 'guide-station-02',
+    };
+    for (final MapEntry(key: question, value: id) in cases.entries) {
+      final answer = catalog.findAnswer(question);
+      expect(answer?.id, id, reason: question);
+      expect(answer?.guideSection, isNotEmpty, reason: question);
+    }
+    expect(catalog.findAnswer('كيف بسترجع حوالة أرسلتها بالغلط؟'), isNull);
+  });
+
+  test('uses a previously selected topic for short follow-up questions', () {
+    final catalog = SupportCatalog.fromJson(sampleCatalog());
+    final topUp = catalog.findAnswer('شام كاش');
+    expect(topUp?.id, 'guide-sham-cash');
+    expect(
+      catalog.findAnswer('طيب قديش بتاخد؟', previous: topUp)?.id,
+      'guide-transfer-time',
+    );
+    final station = catalog.findAnswer('الشيخ نجار');
+    expect(
+      catalog.findAnswer('عندهم مازوت؟', previous: station)?.id,
+      'guide-station-01',
+    );
+    expect(
+      catalog.findAnswer('طيب شو دوام الدوام؟', previous: station),
+      isNull,
+    );
   });
 
   test('source links require the official HTTPS website', () {

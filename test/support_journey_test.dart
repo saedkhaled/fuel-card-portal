@@ -70,7 +70,14 @@ void main() {
     final bar = find.byType(NavigationBar);
     expect(tester.getCenter(support).dx, closeTo(tester.getCenter(bar).dx, 1));
     expect(tester.widget<NavigationBar>(bar).selectedIndex, 2);
-    await tap(find.widgetWithText(ActionChip, 'كيف أتحقق من رصيد بطاقتي؟'));
+    await tester.tap(
+      find.widgetWithText(ActionChip, 'كيف أتحقق من رصيد بطاقتي؟'),
+    );
+    await tester.pump();
+    expect(find.text('عم ببحث عن جواب…'), findsOneWidget);
+    expect(find.textContaining('ستجد رصيد كل بطاقة'), findsNothing);
+    await tester.pumpAndSettle();
+    expect(find.text('عم ببحث عن جواب…'), findsNothing);
     expect(find.textContaining('ستجد رصيد كل بطاقة'), findsOneWidget);
     await tap(find.widgetWithText(TextButton, 'الأرصدة'));
     expect(find.text('إجمالي الرصيد'), findsOneWidget);
@@ -120,6 +127,13 @@ void main() {
     await tap(find.byTooltip('Send question'));
     expect(
       find.textContaining('ستجد رصيد كل بطاقة').hitTestable(),
+      findsOneWidget,
+    );
+    await enterQuestion('من وين بقدر استلم كرتي الجديد؟');
+    await tap(find.byTooltip('Send question'));
+    expect(find.textContaining('ماروتا سيتي').hitTestable(), findsOneWidget);
+    expect(
+      find.textContaining('Source: Customer guide').hitTestable(),
       findsOneWidget,
     );
     await enterQuestion('private draft');

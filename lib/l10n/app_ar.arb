@@ -180,6 +180,8 @@
   "supportNoAnswer": "ما لقيت جواب لهالسؤال. جرّب صياغة تانية أو راجع الأسئلة الشائعة.",
   "supportOfficialSource": "المصدر: موقع البوابة الذهبية",
   "supportSourceUnavailable": "تعذّر فتح موقع البوابة الذهبية.",
+  "supportSearching": "عم ببحث عن جواب…",
+  "supportGuideSource": "المصدر: دليل خدمة العملاء",
   "supportFaq": "الأسئلة الشائعة",
   "supportLoadFailed": "تعذّر تحميل الأسئلة النموذجية.",
   "supportPreview": "جهة دعم تجريبية",

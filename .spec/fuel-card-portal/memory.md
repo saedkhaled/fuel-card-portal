@@ -4,7 +4,7 @@ Android baseline archived 25 November 2026 · [Closeout and verification record]
 
 ## Current state
 
-- 07 adds a centered Support tab with five app guides and 23 Arabic answers from the official Golden Gate site. The Android 16 build verified Arabic first run and the support flow in airplane mode. The approved sheet and connected provider remain follow-up work. [Package 07 evidence](step7_ai_support/offline-implementation.md)
+- 07 Support searches 58 offline passages from Golden Gate’s website, the supplied Arabic customer guide, and the demo app guides. It handles common rephrasings and short follow-ups, shows its source, and displays a searching state. Connected answers and online catalog updates remain planned. [Package 07 evidence](step7_ai_support/offline-implementation.md)
 
 - The Flutter redesign is applied and verified on Android 16 in English and Arabic. All 27 local tests and five Android integration tests passed. The branded APK and implementation evidence are recorded in the [Flutter handoff](step6_figma_redesign/flutter-handoff.md#flutter-implementation-evidence).
 - 06 Figma redesign and design handoff are complete. The user confirmed that the existing prototype examples are optional. The Flutter handoff records the Android implementation and accessibility checks. [Design and evidence](step6_figma_redesign/package.md#implementation-evidence)
