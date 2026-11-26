@@ -2,7 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fleet_cards_demo/demo/demo_fixtures.dart';
+import 'package:fleet_cards_demo/features/stations/station_network.dart';
 import 'package:fleet_cards_demo/features/support/support_catalog.dart';
+import 'package:fleet_cards_demo/features/support/support_stations.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 Map<String, dynamic> sampleCatalog() =>
@@ -10,6 +13,7 @@ Map<String, dynamic> sampleCatalog() =>
         as Map<String, dynamic>;
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   test('sample catalog matches Arabic variants and a known English alias', () {
     final catalog = SupportCatalog.fromJson(sampleCatalog());
     expect(
@@ -21,12 +25,45 @@ void main() {
       'check-balance',
     );
     expect(
-      catalog.findAnswer('I need the NEAREST STATION.')?.id,
-      'find-station',
+      catalog.requestsNearestStation('I need the NEAREST STATION.'),
+      isTrue,
     );
     expect(catalog.findAnswer('كيف عبّي رصيدي؟')?.id, 'top-up');
+    expect(catalog.findAnswer('كيف فيني اشحن البطاقة؟')?.id, 'top-up');
     expect(catalog.findAnswer('وين الفواتير؟')?.id, 'view-invoices');
     expect(catalog.findAnswer('قديش سعر المازوت؟')?.id, 'find-prices');
+  });
+
+  test('answers station questions from the shared official network', () async {
+    final catalog = SupportCatalog.fromJson(sampleCatalog());
+    for (final question in ['محطات', 'وين بلاقي محطة؟', 'Show station map']) {
+      expect(catalog.findAnswer(question)?.sourceUrl, officialStationsMap);
+      expect(catalog.findAnswer(question)?.route, isNull);
+      expect(catalog.requestsNearestStation(question), isFalse);
+    }
+    expect(catalog.requestsNearestStation('جيبلي أقرب كازية'), isTrue);
+    expect(catalog.requestsNearestStation('nearest train station'), isFalse);
+    expect(catalog.findAnswer('nearest train station'), isNull);
+    expect(catalog.requestsNearestStation('أقرب محطة في التطبيق'), isTrue);
+    expect(catalog.findAnswer('أقرب محطة في التطبيق')?.id, 'find-station');
+    final network = await NetworkRepository(
+      FixtureLoader(rootBundle),
+      'assets/demo/standard/network.json',
+    ).load();
+    final partner = nearestOfficialStation(network.stations.values, (
+      latitude: 35.807,
+      longitude: 36.595,
+    ));
+    expect(network.stations, hasLength(21));
+    expect(partner?.name.en, 'Ariha – Idlib');
+    expect(
+      partner?.googleMapsDirections?.queryParameters['destination'],
+      '35.808446,36.594742',
+    );
+    expect(
+      partner?.googleMapsDirections?.queryParameters.containsKey('origin'),
+      isFalse,
+    );
   });
 
   test('company answers use the relevant official website sections', () {

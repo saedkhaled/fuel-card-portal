@@ -1,10 +1,17 @@
 {
   "cities": [
     {
-      "id": "damascus",
+      "id": "aleppo",
       "name": {
-        "en": "Damascus",
-        "ar": "دمشق"
+        "en": "Aleppo",
+        "ar": "حلب"
+      }
+    },
+    {
+      "id": "tartus",
+      "name": {
+        "en": "Tartus",
+        "ar": "طرطوس"
       }
     },
     {
@@ -15,10 +22,59 @@
       }
     },
     {
-      "id": "aleppo",
+      "id": "damascus",
       "name": {
-        "en": "Aleppo",
-        "ar": "حلب"
+        "en": "Damascus",
+        "ar": "دمشق"
+      }
+    },
+    {
+      "id": "rural-damascus",
+      "name": {
+        "en": "Rural Damascus",
+        "ar": "ريف دمشق"
+      }
+    },
+    {
+      "id": "latakia",
+      "name": {
+        "en": "Latakia",
+        "ar": "اللاذقية"
+      }
+    },
+    {
+      "id": "daraa",
+      "name": {
+        "en": "Daraa",
+        "ar": "درعا"
+      }
+    },
+    {
+      "id": "hama",
+      "name": {
+        "en": "Hama",
+        "ar": "حماة"
+      }
+    },
+    {
+      "id": "deir-ez-zor",
+      "name": {
+        "en": "Deir ez-Zor",
+        "ar": "دير الزور"
+      }
+    },
+    {
+      "id": "idlib",
+      "name": {
+        "en": "Idlib",
+        "ar": "إدلب"
+      }
+    },
+    {
+      "id": "raqqa",
+      "name": {
+        "en": "Raqqa",
+        "ar": "الرقة"
       }
     }
   ],
@@ -47,78 +103,649 @@
   ],
   "stations": [
     {
-      "id": "dam-depot",
-      "cityId": "damascus",
+      "id": "alp-yard",
+      "cityId": "aleppo",
       "name": {
-        "en": "South Depot",
-        "ar": "محطة المستودع الجنوبي"
+        "en": "Sheikh Najjar – Aleppo",
+        "ar": "الشيخ نجار – حلب"
       },
       "address": {
-        "en": "Depot Road, Gate 2",
-        "ar": "طريق المستودع، البوابة ٢"
+        "en": "Station in the Sheikh Najjar industrial zone.",
+        "ar": "محطة في المنطقة الصناعية بالشيخ نجار."
       },
-      "availability": {
-        "diesel": "available",
-        "benzene": "low",
-        "premium": "unavailable"
+      "operator": "goldenGate",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 36.272924,
+        "longitude": 37.2400115
       },
-      "directions": [
-        {
-          "en": "Start at the fleet depot entrance.",
-          "ar": "ابدأ من مدخل مستودع الأسطول."
+      "listedProducts": {
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين 90",
+          "availability": "available"
         },
-        {
-          "en": "Follow Depot Road to the second gate.",
-          "ar": "اتبع طريق المستودع حتى البوابة الثانية."
-        },
-        {
-          "en": "The station is beside the marked service lane.",
-          "ar": "المحطة بجانب مسار الخدمة المحدد."
+        "diesel": {
+          "en": "Diesel",
+          "ar": "ديزل",
+          "availability": "low"
         }
-      ]
+      }
+    },
+    {
+      "id": "aleppo2",
+      "cityId": "aleppo",
+      "name": {
+        "en": "Al-Qalaa Roundabout – Aleppo",
+        "ar": "دوار القلعة – حلب"
+      },
+      "address": {
+        "en": "A second station serving Aleppo and the surrounding area.",
+        "ar": "محطة ثانية تخدم مدينة حلب والمناطق المحيطة."
+      },
+      "operator": "goldenGate",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 36.1896514,
+        "longitude": 37.1042937
+      },
+      "listedProducts": {
+        "premium": {
+          "en": "Gasoline 95",
+          "ar": "بنزين 95",
+          "availability": "unavailable"
+        }
+      }
+    },
+    {
+      "id": "tartus1",
+      "cityId": "tartus",
+      "name": {
+        "en": "Tartus 1 – Tartus",
+        "ar": "طرطوس 1 – طرطوس"
+      },
+      "address": {
+        "en": "Coastal station on the main road.",
+        "ar": "محطة ساحلية على الطريق الرئيسي."
+      },
+      "operator": "goldenGate",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 34.8080105,
+        "longitude": 35.9460993
+      },
+      "listedProducts": {
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين 90",
+          "availability": "available"
+        },
+        "premium": {
+          "en": "Gasoline 95",
+          "ar": "بنزين 95",
+          "availability": "available"
+        },
+        "diesel": {
+          "en": "Diesel",
+          "ar": "ديزل",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "tartus2",
+      "cityId": "tartus",
+      "name": {
+        "en": "Tartus 2 – Tartus",
+        "ar": "طرطوس 2 – طرطوس"
+      },
+      "address": {
+        "en": "A second coastal station serving the region.",
+        "ar": "محطة ساحلية ثانية لخدمة المنطقة."
+      },
+      "operator": "goldenGate",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 34.8116477,
+        "longitude": 35.9454689
+      },
+      "listedProducts": {
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين 90",
+          "availability": "unavailable"
+        },
+        "premium": {
+          "en": "Gasoline 95",
+          "ar": "بنزين 95",
+          "availability": "available"
+        },
+        "diesel": {
+          "en": "Diesel",
+          "ar": "ديزل",
+          "availability": "low"
+        }
+      }
     },
     {
       "id": "hms-junction",
       "cityId": "homs",
       "name": {
-        "en": "Junction Station",
-        "ar": "محطة التقاطع"
+        "en": "Hassia – Homs",
+        "ar": "حسياء – حمص"
       },
       "address": {
-        "en": "East Junction, service lane",
-        "ar": "التقاطع الشرقي، مسار الخدمة"
+        "en": "Hassia station in Homs Governorate.",
+        "ar": "محطة حسياء في محافظة حمص."
       },
-      "availability": {
-        "diesel": "low",
-        "benzene": "available"
+      "operator": "goldenGate",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 34.3494666,
+        "longitude": 36.7713178
       },
-      "directions": null
+      "listedProducts": {
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين 90",
+          "availability": "unavailable"
+        },
+        "premium": {
+          "en": "Gasoline 95",
+          "ar": "بنزين 95",
+          "availability": "available"
+        },
+        "diesel": {
+          "en": "Diesel",
+          "ar": "ديزل",
+          "availability": "low"
+        }
+      }
     },
     {
-      "id": "alp-yard",
-      "cityId": "aleppo",
+      "id": "dam-depot",
+      "cityId": "damascus",
       "name": {
-        "en": "North Yard",
-        "ar": "محطة الساحة الشمالية"
+        "en": "Marota City – Damascus",
+        "ar": "ماروتا سيتي – دمشق"
       },
       "address": {
-        "en": "Terminal Road, loading yard",
-        "ar": "طريق المحطة، ساحة التحميل"
+        "en": "A modern station in the Marota City project.",
+        "ar": "محطة حديثة في مشروع ماروتا سيتي."
       },
-      "availability": {
-        "diesel": "unavailable",
-        "premium": "available"
+      "operator": "goldenGate",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 33.4932607,
+        "longitude": 36.2623043
       },
-      "directions": [
-        {
-          "en": "Start at the terminal roundabout.",
-          "ar": "ابدأ من دوار المحطة."
+      "listedProducts": {
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين 90",
+          "availability": "low"
         },
-        {
-          "en": "Continue to the marked loading yard entrance.",
-          "ar": "تابع حتى مدخل ساحة التحميل المحدد."
+        "premium": {
+          "en": "Gasoline 95",
+          "ar": "بنزين 95",
+          "availability": "unavailable"
+        },
+        "diesel": {
+          "en": "Diesel",
+          "ar": "ديزل",
+          "availability": "available"
         }
-      ]
+      }
+    },
+    {
+      "id": "uptown",
+      "cityId": "damascus",
+      "name": {
+        "en": "Uptown Station – Damascus",
+        "ar": "Uptown Station – دمشق"
+      },
+      "address": {
+        "en": "Uptown Station in Damascus.",
+        "ar": "Uptown Station في دمشق."
+      },
+      "operator": "goldenGate",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 33.5263875,
+        "longitude": 36.2274531
+      },
+      "listedProducts": {
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين 90",
+          "availability": "low"
+        },
+        "premium": {
+          "en": "Gasoline 95",
+          "ar": "بنزين 95",
+          "availability": "available"
+        },
+        "diesel": {
+          "en": "Diesel",
+          "ar": "ديزل",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "mobile",
+      "cityId": "damascus",
+      "name": {
+        "en": "Mobile Fuel Unit – Damascus",
+        "ar": "وحدة وقود متنقلة – دمشق"
+      },
+      "address": {
+        "en": "A mobile refuelling unit serving multiple sites.",
+        "ar": "وحدة تعبئة متنقلة تخدم مواقع متعددة."
+      },
+      "operator": "goldenGate",
+      "mobile": true,
+      "coordinates": {
+        "latitude": 33.495359,
+        "longitude": 36.251609
+      },
+      "listedProducts": {
+        "premium": {
+          "en": "Gasoline 95",
+          "ar": "بنزين 95",
+          "availability": "low"
+        }
+      }
+    },
+    {
+      "id": "taiba-sham-new",
+      "cityId": "damascus",
+      "name": {
+        "en": "New Damascus – Damascus",
+        "ar": "الشام الجديدة – دمشق"
+      },
+      "address": {
+        "en": "Harasta Highway, after Al-Dahiya Bridge.",
+        "ar": "أوتستراد حرستا بعد جسر الضاحية."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 33.585707,
+        "longitude": 36.388291
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "unavailable"
+        }
+      }
+    },
+    {
+      "id": "taiba-kisweh-military",
+      "cityId": "rural-damascus",
+      "name": {
+        "en": "Al-Kiswah Military – Rural Damascus",
+        "ar": "الكسوة العسكرية – ريف دمشق"
+      },
+      "address": {
+        "en": "At the entrance to Al-Kiswah, Rural Damascus.",
+        "ar": "مدخل مدينة الكسوة، ريف دمشق."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 33.366891,
+        "longitude": 36.249483
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "taiba-shahrour",
+      "cityId": "latakia",
+      "name": {
+        "en": "Al-Shahrour – Latakia",
+        "ar": "الشحرور – اللاذقية"
+      },
+      "address": {
+        "en": "M1 road, southern entrance to Latakia.",
+        "ar": "طريق M1، مدخل اللاذقية الجنوبي."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 35.562432,
+        "longitude": 35.784771
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "low"
+        }
+      }
+    },
+    {
+      "id": "taiba-rahman",
+      "cityId": "latakia",
+      "name": {
+        "en": "Al-Rahman – Latakia",
+        "ar": "الرحمن – اللاذقية"
+      },
+      "address": {
+        "en": "Road 1, northern entrance to Latakia.",
+        "ar": "طريق 1، مدخل اللاذقية الشمالي."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 35.510562,
+        "longitude": 35.857915
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "low"
+        }
+      }
+    },
+    {
+      "id": "taiba-iman",
+      "cityId": "daraa",
+      "name": {
+        "en": "Al-Iman – Daraa",
+        "ar": "الإيمان – درعا"
+      },
+      "address": {
+        "en": "Daraa International Highway, Namer, Khirbet Ghazaleh area.",
+        "ar": "أوتستراد درعا الدولي، نامر، ناحية خربة غزالة."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 32.771856,
+        "longitude": 36.20332
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "low"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "taiba-khatib",
+      "cityId": "homs",
+      "name": {
+        "en": "Al-Khatib – Homs",
+        "ar": "الخطيب – حمص"
+      },
+      "address": {
+        "en": "Palmyra–Deir ez-Zor Highway.",
+        "ar": "أوتستراد تدمر – دير الزور."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 34.575944,
+        "longitude": 38.308466
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "taiba-raseef",
+      "cityId": "homs",
+      "name": {
+        "en": "Al-Raseef – Homs",
+        "ar": "الرصيف – حمص"
+      },
+      "address": {
+        "en": "West of Satcop.",
+        "ar": "غرب الساتكوب."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 34.70364,
+        "longitude": 36.630726
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "unavailable"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "taiba-zain-al-abidin",
+      "cityId": "hama",
+      "name": {
+        "en": "Zain Al-Abidin – Hama",
+        "ar": "زين العابدين – حماة"
+      },
+      "address": {
+        "en": "Damascus–Aleppo International Highway.",
+        "ar": "طريق دمشق – حلب الدولي."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 35.146447,
+        "longitude": 36.78567
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "unavailable"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "taiba-dallah",
+      "cityId": "deir-ez-zor",
+      "name": {
+        "en": "Al-Dallah – Deir ez-Zor",
+        "ar": "الدلة – دير الزور"
+      },
+      "address": {
+        "en": "Right of Al-Dallah Roundabout in the city.",
+        "ar": "يمين دوار الدلة في المدينة."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 35.332054,
+        "longitude": 40.123109
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "low"
+        }
+      }
+    },
+    {
+      "id": "taiba-47",
+      "cityId": "deir-ez-zor",
+      "name": {
+        "en": "47 – Deir ez-Zor",
+        "ar": "الـ47 – دير الزور"
+      },
+      "address": {
+        "en": "Al-Hasakah Highway, right after 47 Roundabout.",
+        "ar": "أوتستراد الحسكة، بعد دوار الـ47 يميناً."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 36.081776,
+        "longitude": 40.657692
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "low"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "available"
+        }
+      }
+    },
+    {
+      "id": "taiba-ariha",
+      "cityId": "idlib",
+      "name": {
+        "en": "Ariha – Idlib",
+        "ar": "أريحا – إدلب"
+      },
+      "address": {
+        "en": "Ariha, Latakia road.",
+        "ar": "أريحا، طريق اللاذقية."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 35.808446,
+        "longitude": 36.594742
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "low"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "unavailable"
+        }
+      }
+    },
+    {
+      "id": "taiba-madina",
+      "cityId": "idlib",
+      "name": {
+        "en": "Al-Madina – Idlib",
+        "ar": "المدينة – إدلب"
+      },
+      "address": {
+        "en": "Idlib–Sarmine Highway, south side of the road.",
+        "ar": "أوتستراد إدلب – سرمين، جنوب الطريق."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 35.929116,
+        "longitude": 36.656323
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "unavailable"
+        }
+      }
+    },
+    {
+      "id": "taiba-maqass",
+      "cityId": "raqqa",
+      "name": {
+        "en": "Al-Maqass – Raqqa",
+        "ar": "المقص – الرقة"
+      },
+      "address": {
+        "en": "Road 4, opposite Ratla Agricultural Secondary School.",
+        "ar": "طريق رقم 4، مقابل ثانوية رطلة الزراعية."
+      },
+      "operator": "taiba",
+      "mobile": false,
+      "coordinates": {
+        "latitude": 35.90341,
+        "longitude": 38.978922
+      },
+      "listedProducts": {
+        "diesel": {
+          "en": "Diesel",
+          "ar": "مازوت أول",
+          "availability": "available"
+        },
+        "benzene": {
+          "en": "Gasoline 90",
+          "ar": "بنزين أوكتان 90",
+          "availability": "available"
+        }
+      }
     }
   ],
   "currentBulletinId": "prices-2026-11-24",

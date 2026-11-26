@@ -1,3 +1,5 @@
+import '../../core/coordinates.dart';
+import '../../core/google_maps.dart';
 import '../../demo/demo_fixtures.dart';
 import '../cards/fleet_card.dart';
 
@@ -10,7 +12,13 @@ class NetworkText {
   String inLanguage(String language) => language == 'ar' ? ar : en;
 }
 
-enum FuelAvailability { available, low, unavailable }
+final officialStationsMap = Uri.https('goldengate.sy', '/', {
+  'stationView': 'all',
+}).replace(fragment: 'stations');
+
+enum FuelAvailability { available, low, unavailable, listed }
+
+enum StationOperator { goldenGate, taiba }
 
 class FuelStation {
   const FuelStation({
@@ -20,6 +28,11 @@ class FuelStation {
     required this.address,
     required this.availability,
     required this.directions,
+    this.mapDestination,
+    this.coordinates,
+    this.operator,
+    this.mobile = false,
+    this.productNames = const {},
   });
 
   final String id;
@@ -28,6 +41,23 @@ class FuelStation {
   final NetworkText address;
   final Map<FuelProduct, FuelAvailability> availability;
   final List<NetworkText> directions;
+  final String? mapDestination;
+  final Coordinates? coordinates;
+  final StationOperator? operator;
+  final bool mobile;
+  final Map<FuelProduct, NetworkText> productNames;
+
+  bool get hasDirections =>
+      coordinates != null || mapDestination != null || directions.isNotEmpty;
+
+  Uri? get googleMapsDirections {
+    if (coordinates case (latitude: final lat, longitude: final lon)) {
+      return googleMapsDrivingDirections('$lat,$lon');
+    }
+    final destination = mapDestination;
+    if (destination == null) return null;
+    return googleMapsDrivingDirections(destination);
+  }
 }
 
 class PriceBulletin {
@@ -61,12 +91,13 @@ class StationNetwork {
 }
 
 class StationFilter {
-  const StationFilter({this.cityId, this.product});
+  const StationFilter({this.cityId, this.product, this.operator});
 
   final String? cityId;
   final FuelProduct? product;
+  final StationOperator? operator;
 
-  bool get isActive => cityId != null || product != null;
+  bool get isActive => cityId != null || product != null || operator != null;
 
   List<FuelStation> results(
     StationNetwork data, {
@@ -74,15 +105,24 @@ class StationFilter {
     String search = '',
   }) {
     final query = _normalize(search);
-    return [
+    final matches = [
       for (final station in data.stations.values)
         if ((cityId == null || cityId == station.cityId) &&
+            (operator == null || operator == station.operator) &&
             (product == null || station.availability.containsKey(product)) &&
             (_normalize(station.name.inLanguage(language)).contains(query) ||
                 _normalize(
                   station.address.inLanguage(language),
                 ).contains(query)))
           station,
+    ];
+    return [
+      ...matches.where(
+        (station) => station.operator == StationOperator.goldenGate,
+      ),
+      ...matches.where(
+        (station) => station.operator != StationOperator.goldenGate,
+      ),
     ];
   }
 
@@ -147,12 +187,36 @@ class _NetworkDecoder {
       final city = _string(row['cityId'], 'station city');
       if (!cities.containsKey(city)) _fail('unknown city for $id');
       final availability = <FuelProduct, FuelAvailability>{};
-      for (final entry in _object(
-        row['availability'],
-        'availability',
-      ).entries) {
-        availability[_enum(FuelProduct.values, entry.key, 'station product')] =
-            _enum(FuelAvailability.values, entry.value, 'availability state');
+      final productNames = <FuelProduct, NetworkText>{};
+      if (row['listedProducts'] case final Object listed) {
+        for (final entry in _object(listed, 'listed products').entries) {
+          final product = _enum(
+            FuelProduct.values,
+            entry.key,
+            'station product',
+          );
+          final listedProduct = _object(entry.value, 'listed station product');
+          final state = listedProduct['availability'];
+          availability[product] = state == null
+              ? FuelAvailability.listed
+              : _enum(FuelAvailability.values, state, 'availability state');
+          productNames[product] = _localized(listedProduct);
+        }
+      } else {
+        for (final entry in _object(
+          row['availability'],
+          'availability',
+        ).entries) {
+          availability[_enum(
+            FuelProduct.values,
+            entry.key,
+            'station product',
+          )] = _enum(
+            FuelAvailability.values,
+            entry.value,
+            'availability state',
+          );
+        }
       }
       if (availability.isEmpty) _fail('empty availability for $id');
       final rawDirections = row['directions'];
@@ -162,6 +226,12 @@ class _NetworkDecoder {
           items.map(_localized).toList(),
         _ => _fail('invalid directions for $id'),
       };
+      final mapDestination = row['mapDestination'];
+      final operator = row['operator'];
+      final rawCoordinates = row['coordinates'];
+      final coordinates = rawCoordinates == null
+          ? null
+          : _readCoordinates(rawCoordinates, id);
       _insert(
         stations,
         id,
@@ -172,6 +242,15 @@ class _NetworkDecoder {
           address: _localized(row['address']),
           availability: Map.unmodifiable(availability),
           directions: List.unmodifiable(directions),
+          mapDestination: mapDestination == null
+              ? null
+              : _string(mapDestination, 'map destination for $id').trim(),
+          coordinates: coordinates,
+          operator: operator == null
+              ? null
+              : _enum(StationOperator.values, operator, 'station operator'),
+          mobile: row['mobile'] == true,
+          productNames: Map.unmodifiable(productNames),
         ),
         'station',
       );
@@ -226,6 +305,12 @@ class _NetworkDecoder {
   }
 
   Never _fail(String why) => throw FixtureException(path, why);
+
+  Coordinates _readCoordinates(Object value, String id) {
+    final row = _object(value, 'station coordinates');
+    return parseCoordinates(row['latitude'], row['longitude']) ??
+        _fail('invalid coordinates for $id');
+  }
 
   Map<String, dynamic> _object(Object? value, String label) =>
       value is Map<String, dynamic> ? value : _fail('invalid $label');

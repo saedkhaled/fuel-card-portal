@@ -34,31 +34,52 @@ void main() {
       );
       expect(
         filter
-            .results(data, language: 'en', search: '  DEPOT   road ')
+            .results(data, language: 'en', search: '  MAROTA   CITY ')
             .single
             .id,
         'dam-depot',
       );
       expect(
-        filter.results(data, language: 'ar', search: 'المستودع').single.id,
+        filter.results(data, language: 'ar', search: 'ماروتا').single.id,
         'dam-depot',
       );
       expect(
-        filter.results(data, language: 'ar', search: 'محطة التقاطع'),
+        filter.results(data, language: 'ar', search: 'حسياء – حمص'),
         isEmpty,
       );
       final station = data.stations['dam-depot']!;
-      expect(
-        station.availability.values.toSet(),
-        FuelAvailability.values.toSet(),
-      );
-      expect(station.directions, isNotEmpty);
+      expect(station.availability, {
+        FuelProduct.diesel: FuelAvailability.available,
+        FuelProduct.benzene: FuelAvailability.low,
+        FuelProduct.premium: FuelAvailability.unavailable,
+      });
+      for (final station in data.stations.values) {
+        expect(
+          station.productNames.keys.toSet(),
+          station.availability.keys.toSet(),
+        );
+        expect(
+          station.availability.values,
+          isNot(contains(FuelAvailability.listed)),
+        );
+      }
+      expect(station.directions, isEmpty);
+      expect(data.stations, hasLength(21));
+      expect(station.operator, StationOperator.goldenGate);
       expect(data.stations['hms-junction']!.directions, isEmpty);
+      expect(data.stations['hms-junction']!.googleMapsDirections, isNotNull);
+      expect(
+        data
+            .stations['alp-yard']!
+            .googleMapsDirections!
+            .queryParameters['destination'],
+        '36.272924,37.2400115',
+      );
       expect(
         const StationFilter(
           product: FuelProduct.premium,
         ).results(data, language: 'en').map((item) => item.id),
-        ['dam-depot', 'alp-yard'],
+        containsAll(['dam-depot', 'aleppo2']),
       );
     },
   );
@@ -89,6 +110,38 @@ void main() {
     },
   );
 
+  test(
+    'prioritizes Golden Gate and combines partner, city, and fuel filters',
+    () async {
+      final original = await load();
+      final shuffled = StationNetwork(
+        cities: original.cities,
+        products: original.products,
+        stations: Map.fromEntries(original.stations.entries.toList().reversed),
+        bulletins: original.bulletins,
+        currentBulletinId: original.currentBulletinId,
+      );
+      final all = const StationFilter().results(shuffled, language: 'en');
+      expect(
+        all.take(8).map((station) => station.operator),
+        everyElement(StationOperator.goldenGate),
+      );
+      expect(
+        all.skip(8).map((station) => station.operator),
+        everyElement(StationOperator.taiba),
+      );
+      const filter = StationFilter(
+        operator: StationOperator.taiba,
+        cityId: 'idlib',
+        product: FuelProduct.diesel,
+      );
+      expect(
+        filter.results(shuffled, language: 'en', search: 'ariha').single.id,
+        'taiba-ariha',
+      );
+    },
+  );
+
   test('rejects broken joins and invalid calendar dates', () async {
     final encoded = await rootBundle.loadString(path);
     for (final mutation in [
@@ -98,6 +151,10 @@ void main() {
         '"effectiveDate": "2026-02-31"',
       ),
       encoded.replaceFirst('"premium": 56000', '"premium": -1'),
+      encoded.replaceFirst(
+        '"availability": "available"',
+        '"availability": "unknown"',
+      ),
     ]) {
       expect(jsonDecode(mutation), isA<Map>());
       final assets = FixtureAssets()..files[path] = mutation;
@@ -141,7 +198,7 @@ void main() {
       expect(find.text('No price bulletins to show.'), findsOneWidget);
     },
   );
-  testWidgets('availability badges use the same colors in both views', (
+  testWidgets('fuel availability uses the same three colors in both views', (
     tester,
   ) async {
     final fixture = await tester.runAsync(() => rootBundle.loadString(path));
@@ -167,14 +224,14 @@ void main() {
       if (page is Scaffold) {
         await tester.enterText(
           find.byKey(const Key('station-search')),
-          'depot road',
+          'marota city',
         );
         await tester.pumpAndSettle();
       }
       for (final (label, background, foreground) in [
         ('Diesel · Available', 0xffdff5e7, 0xff14633b),
-        ('Benzine · Running low', 0xffffefad, 0xff694a00),
-        ('Premium benzine · Not available', 0xffffe2e0, 0xff9b2226),
+        ('Gasoline 90 · Running low', 0xffffefad, 0xff694a00),
+        ('Gasoline 95 · Not available', 0xffffe2e0, 0xff9b2226),
       ]) {
         final text = find.text(label);
         expect(tester.widget<Text>(text).style?.color, Color(foreground));
@@ -218,22 +275,22 @@ void main() {
       }
 
       final search = find.byKey(const Key('station-search'));
-      await tester.enterText(search, 'depot road');
+      await tester.enterText(search, 'marota city');
       await tester.pumpAndSettle();
       await tap(find.byTooltip('Filter'));
       await tap(find.widgetWithText(ChoiceChip, 'Damascus'));
       await tap(find.widgetWithText(ChoiceChip, 'Diesel'));
       await tap(find.text('Apply filters'));
-      expect(find.text('South Depot'), findsOneWidget);
+      expect(find.text('Marota City – Damascus'), findsOneWidget);
       expect(tester.widget<TextField>(search).focusNode!.hasFocus, isFalse);
       await tap(find.byTooltip('Filter'));
       await tap(find.text('Clear filters'));
       await tap(find.text('Apply filters'));
       expect(find.byType(InputChip), findsNothing);
-      await tester.enterText(search, 'junction');
+      await tester.enterText(search, 'hassia');
       await tester.pumpAndSettle();
-      expect(find.text('Junction Station'), findsOneWidget);
-      expect(find.text('Directions'), findsNothing);
+      expect(find.text('Hassia – Homs'), findsOneWidget);
+      expect(find.text('Directions'), findsOneWidget);
     },
   );
 }

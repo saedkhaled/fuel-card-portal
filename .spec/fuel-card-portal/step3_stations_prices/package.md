@@ -34,3 +34,19 @@ Station and bulletin journeys work in airplane mode from real tabs/shortcuts. Pu
 - `flutter analyze --no-pub` and all 34 `flutter test --no-pub` tests passed. The added widget check verifies the three foreground and background pairs in the station list and station details. Their text contrast ratios are 6.38:1, 7.05:1, and 6.49:1.
 - Built with `flutter build apk --release --target-platform android-arm64`. The branded release-mode APK is `/tmp/fleet-station-colors.ARh1ll/fleet-cards-golden-gate-station-colors-arm64.apk`, SHA-256 `57224ea9fa668d6aee073c0ca5e4a8de9cd494d834a23a8893309799bf0110d2`.
 - Installed with `adb -s emulator-5554 install -r` on Android 16/API 36. Verified all three color, icon, and label combinations on the Arabic station list and South Depot details.
+
+## Official station catalogue
+
+- The standard network fixture contains the eight Golden Gate sites and thirteen Taiba partner sites published on the [official interactive map](https://goldengate.sy/?stationView=all#stations). It includes bilingual names, locations, coordinates, operators, and listed fuels. The station details link to the map for access to current availability through the customer portal.
+- The operator filter combines with the existing city, fuel, and text filters. Unfiltered results place Golden Gate first. The sales and alert routes retain their existing station IDs with the corresponding official station labels.
+- Support uses the same network repository for nearby searches. The Android app requests location in the foreground, chooses the nearest fixed station by straight-line distance, and sends its published destination to Google Maps.
+- `flutter test --no-pub integration_test/stations_prices_smoke_test.dart -d emulator-5554` passed on the Pixel 3a Android 13/API 33 emulator. It exercised the default order, both operator filters, filter combinations and reset, station details, the directions handoff and both price bulletins.
+- Built with `flutter build apk --debug --target-platform android-arm64 --no-pub` and installed with `adb -s emulator-5554 install -r`. SHA-256 `dfd2dfc2b8c20fd70bef0e1ab88f4cf95436b95d5173b6cd0449ddd452c06195`.
+
+## Availability and operator card styling
+
+- The test catalogue supplies a station-specific availability value for each published fuel. Both the list and detail screens show the three existing text and color treatments. The station cards use a pale gold gradient for Golden Gate and a pale green gradient for Taiba.
+- `flutter test integration_test/stations_prices_smoke_test.dart -d emulator-5554` passed on Android 13/API 33. It verified both station gradients, the three availability colors in both views, and the Arabic availability heading.
+- Built a development-signed release APK with `flutter build apk --release --target-platform android-arm,android-arm64`. The delivered APK with SHA-256 `e9c9de982e98aa89b6e5f3f37b62cffcfa81bb7a3e7c1a37a9cdc3b27aab33b0` was installed on the Pixel 3a emulator. A manual walkthrough confirmed both operator backgrounds and the availability labels.
+
+- The Golden Gate card header now uses the same navy, ink, and gold as the app identity. The station heading and availability section share the same horizontal alignment as the Taiba cards. The Android smoke test passed and the revised ARM release APK was visually checked on the Pixel 3a. SHA-256 `657dd3f2ff2b0774b9e201000a3e13c87dffbb4d4e7fe8f400685c3113692651`.

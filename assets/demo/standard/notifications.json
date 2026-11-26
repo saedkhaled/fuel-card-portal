@@ -36,12 +36,12 @@
         "at": "2026-11-25T11:00:00Z",
         "read": false,
         "title": {
-          "en": "Diesel available at South Depot",
-          "ar": "المازوت متوفر في محطة المستودع الجنوبي"
+          "en": "Fuel information for Marota City",
+          "ar": "معلومات الوقود في محطة ماروتا سيتي"
         },
         "body": {
-          "en": "A simulated station fuel availability update.",
-          "ar": "تحديث تجريبي عن توفر الوقود في المحطة."
+          "en": "View the listed fuels and check the official map for current availability.",
+          "ar": "اطّلع على أنواع الوقود المدرجة، وراجع الخريطة الرسمية للتوفّر الحالي."
         },
         "stationId": "dam-depot"
       }

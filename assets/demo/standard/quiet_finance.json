@@ -89,15 +89,15 @@
     {
       "id": "dam-depot",
       "name": {
-        "en": "South Depot",
-        "ar": "محطة المستودع الجنوبي"
+        "en": "Marota City – Damascus",
+        "ar": "ماروتا سيتي – دمشق"
       }
     },
     {
       "id": "hms-junction",
       "name": {
-        "en": "Junction Station",
-        "ar": "محطة التقاطع"
+        "en": "Hassia – Homs",
+        "ar": "حسياء – حمص"
       }
     }
   ],

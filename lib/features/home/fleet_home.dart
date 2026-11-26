@@ -49,7 +49,29 @@ class FleetHome extends StatelessWidget {
         const SizedBox(height: 12),
         BalanceHero(
           amountMinor: data.totalBalance,
-          footer: Text('${labels.cardCount} · ${data.cards.length}'),
+          footer: Wrap(
+            spacing: 28,
+            runSpacing: 12,
+            children: [
+              for (final (label, count) in [
+                (labels.cardCount, data.cards.length),
+                (labels.operations, data.operations.length),
+              ])
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '$count',
+                      style: theme.textTheme.titleLarge!.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+                    Text(label),
+                  ],
+                ),
+            ],
+          ),
         ),
         const SizedBox(height: 12),
         LayoutBuilder(
@@ -95,6 +117,24 @@ class FleetHome extends StatelessWidget {
             );
           },
         ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => context.push(PortalDestinations.sales),
+                child: Text(labels.sales, textAlign: TextAlign.center),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: OutlinedButton(
+                onPressed: () => context.push(PortalDestinations.prices),
+                child: Text(labels.priceBulletins, textAlign: TextAlign.center),
+              ),
+            ),
+          ],
+        ),
         const SizedBox(height: 6),
         Row(
           children: [
@@ -133,24 +173,6 @@ class FleetHome extends StatelessWidget {
                 '$label · $count',
                 style: theme.textTheme.bodySmall!.copyWith(color: portalMuted),
               ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => context.push(PortalDestinations.sales),
-                child: Text(labels.sales, textAlign: TextAlign.center),
-              ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => context.push(PortalDestinations.prices),
-                child: Text(labels.priceBulletins, textAlign: TextAlign.center),
-              ),
-            ),
           ],
         ),
       ],

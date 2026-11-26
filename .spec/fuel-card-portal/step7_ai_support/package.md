@@ -1,6 +1,6 @@
 # Package 07 · Arabic-first AI support
 
-Status Offline demo and live Gemini verified on the Android emulator · Release attestation pending
+Status Connected Android smoke test passed · Live Gemini verification on this build pending
 
 ## Product scope
 
@@ -12,7 +12,7 @@ Read the [current navigation contract](../architecture.md#navigation-and-state),
 
 ## Navigation and chat
 
-- Use five primary destinations in logical order from the reading edge. **Home · Cards · Assistant · Stations · More**. Give Assistant a raised button treatment in the center of the existing bar. Implement it as a selectable destination with a visible label, selected state, and accessibility semantics. Show the full feature name in the app bar. Keep the tab centered in Arabic RTL and English LTR.
+- Use five primary destinations in logical order from the reading edge. **Home · Cards · Assistant · Stations · More**. Give Assistant a raised button treatment in the center of the existing bar. Implement it as a selectable destination with a visible label, selected state, and accessibility semantics. Show **المساعد الذكي / Smart Assistant** in the app bar. Keep the tab centered in Arabic RTL and English LTR.
 - Keep `/balances` reachable through the existing Home shortcut and add a Balances entry under More. Retain the route and existing operations links. Keep the FAQ under More and link it from Support. Update affected navigation tests to use the new entry points.
 - Give Support its own guarded shell branch at `/support` and preserve its draft and conversation while switching tabs within the same session. Android Back dismisses the keyboard first, then returns to the previous app destination or Home when entered directly. Sign-out clears the draft and transcript and discards in-flight replies.
 - Use the existing visual system for the chat page. Show a short invitation, a few starter questions drawn from approved topics, the conversation, and a text composer. Show catalog loading and retry, searching, and no-answer states in both UI languages. Keep the composer reachable with the keyboard open and announce completed replies to TalkBack.
@@ -45,3 +45,18 @@ The [Gemini pilot plan](gemini-pilot.md) covers direct Android access through Fi
 - Baseline checked with `git status --short --branch` and `git log -1 --oneline`. Branch `codex/fuel-card-portal` was at `7aea3d0`, with pre-existing edits in the Package 06 Flutter handoff and Android `MainActivity.kt`.
 - Code inspection confirmed the Arabic default and stored locale, the five shell destinations, the existing Home → Balances shortcut, the FAQ under More, and an existing Arabic-first widget assertion. Planning completed through source inspection. See the offline implementation evidence for the updated Android results.
 - Approved support content, an approved contact if offered, and a provider and hosting decision are inputs for the connected customer rollout.
+
+## Website links and nearby stations follow-up
+
+- Company answers remain grounded in the bundled public website content and customer guide. The reply shows a clickable source URL. Station questions use the official interactive map, and app-specific questions can also open the Stations tab.
+- The nearest-station starter question and typed requests use the same [official catalogue as the Stations tab](../step3_stations_prices/package.md#official-station-catalogue). The app requests foreground location for this action and offers Android settings or a retry when appropriate, with a Google Maps search available if it cannot determine the nearest station. The app calculates the nearest station on-device. The directions button sends its destination coordinates to Google Maps.
+- `flutter test --no-pub integration_test/support_home_smoke_test.dart -d emulator-5554` passed on Android 13/API 33. It checked the Home totals and shortcut order, the official map URL, the nearest partner station destination, and the permission-denied reply.
+- After merging upstream `0f73d67`, `flutter test integration_test/support_home_smoke_test.dart -d emulator-5554 --reporter expanded` passed on Android 13/API 33. It checked the short Arabic assistant title, Arabic top-up, official links, injected Gemini replies and safeguards, and the location retry and settings actions.
+- The installed debug build displayed the Android location prompt. With a simulated fix near Ariha, it identified the Ariha station and brought Google Maps to the foreground when tapped.
+- The current emulator's Firebase App Check registration blocked the live Gemini exercise. The Firebase project, Android app ID, and release Play Integrity provider were carried forward from `0f73d67`. Live replies on a physical Android device still need verification for this build.
+
+## Signed sideload build
+
+- Built local changes based on `0f73d67` with `flutter build apk --release --target-platform android-arm,android-arm64`. Verified the development signing certificate matches the previous local sideload APK. The packaged app is `com.example.fleet_cards_demo` version `0.1.0+1` and requires API 24 or later. Its Dart app binaries target ARM and ARM64.
+- `adb -s emulator-5554 install -r` succeeded with the exact deliverable. The Android 13/API 33 emulator launched the Arabic sign-in screen. The user then signed in on the emulator.
+- APK SHA-256 `c1b2d16b2b69e86bb7cdc2ded9089d1517d9ad212d9bf40969513def423475e1`. Live Gemini and Play Integrity acceptance for this signer on a physical device remain pending.

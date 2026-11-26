@@ -79,7 +79,7 @@ void main() {
     expect(tester.getCenter(support).dx, closeTo(tester.getCenter(bar).dx, 1));
     expect(tester.widget<NavigationBar>(bar).selectedIndex, 2);
     expect(find.text('المساعد'), findsOneWidget);
-    expect(find.text('مساعد البوابة الذهبية الذكي'), findsOneWidget);
+    expect(find.text('المساعد الذكي'), findsOneWidget);
     await tester.tap(
       find.widgetWithText(ActionChip, 'كيف أتحقق من رصيد بطاقتي؟'),
     );
@@ -104,7 +104,11 @@ void main() {
       'وين بلاقي محطة؟',
     );
     await tap(find.byTooltip('إرسال السؤال'));
-    expect(find.textContaining('صفِّ النتائج حسب المدينة'), findsOneWidget);
+    expect(find.text('خريطة المحطات على موقع غولدن غيت'), findsOneWidget);
+    expect(
+      find.text('https://goldengate.sy/?stationView=all#stations'),
+      findsOneWidget,
+    );
 
     await enterQuestion('شو دوام خدمة العملاء؟');
     await tap(find.byTooltip('إرسال السؤال'));

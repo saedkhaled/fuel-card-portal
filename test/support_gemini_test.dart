@@ -98,4 +98,28 @@ void main() {
     expect(await gemini.answer(catalog, cardQuestion, firstTurn: true), isNull);
     expect(catalog.findAnswer(cardQuestion)?.id, 'company-card');
   });
+
+  test(
+    'account identifiers and verification codes do not reach Gemini',
+    () async {
+      final gemini = SupportGemini((_) async {
+        fail('Private input must be handled before the provider call.');
+      });
+      for (final question in [
+        'رصيد البطاقة ٠٩٧١٢٣٤٥٦٧',
+        'I forgot my PIN',
+        'وين رمز التحقق؟',
+        'verify customer@example.com',
+      ]) {
+        expect(await gemini.answer(catalog, question, firstTurn: true), isNull);
+      }
+    },
+  );
+
+  test('an invented transfer number falls back to the catalog', () async {
+    final gemini = SupportGemini((_) async => 'حوّل على الرقم ٠٩٩٩١٢٣٤٥٦.');
+    const question = 'كيف فيني اشحن البطاقة؟';
+    expect(await gemini.answer(catalog, question, firstTurn: true), isNull);
+    expect(catalog.findAnswer(question)?.id, 'top-up');
+  });
 }

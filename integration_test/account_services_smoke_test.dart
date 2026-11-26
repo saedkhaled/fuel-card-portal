@@ -96,8 +96,8 @@ void main() {
     );
     await back();
     await tap(find.byTooltip('Notifications'));
-    expect(find.text('Diesel available at South Depot'), findsOneWidget);
-    await tap(find.text('Diesel available at South Depot'));
+    expect(find.text('Fuel information for Marota City'), findsOneWidget);
+    await tap(find.text('Fuel information for Marota City'));
     expect(find.text('Station details'), findsOneWidget);
     await back();
     expect(find.byTooltip('Mark as read'), findsOneWidget);

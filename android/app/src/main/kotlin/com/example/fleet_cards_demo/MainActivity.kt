@@ -19,9 +19,11 @@ class MainActivity : FlutterActivity() {
     )
 
     private var pendingSave: PendingSave? = null
+    private val stationLocation = ForegroundStationLocation(this)
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        stationLocation.register(flutterEngine.dartExecutor.binaryMessenger)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "com.example.fleet_cards_demo/exports")
             .setMethodCallHandler { call, result ->
                 if (call.method == "appVersion") {
@@ -61,6 +63,20 @@ class MainActivity : FlutterActivity() {
                     result.error("file_action_failed", "Could not open Android file action", null)
                 }
             }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray,
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        stationLocation.onPermissionResult(requestCode)
+    }
+
+    override fun onDestroy() {
+        stationLocation.close()
+        super.onDestroy()
     }
 
     private fun openSavedDocument(uri: Uri, mime: String) {

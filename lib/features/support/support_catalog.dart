@@ -34,6 +34,15 @@ class SupportEntry {
 class SupportCatalog {
   static const assistantIdentityId = 'assistant-identity';
 
+  static Iterable<Uri> officialLinksIn(String text) sync* {
+    for (final match in _linkPattern.allMatches(text)) {
+      final link = match.group(0)!.replaceFirst(_linkPunctuation, '');
+      final parsed = Uri.tryParse(link);
+      final url = parsed?.path == '' ? parsed!.replace(path: '/') : parsed;
+      if (_isOfficialSource(url)) yield url!;
+    }
+  }
+
   SupportCatalog._(this.entries) {
     _index = [for (final entry in entries) _IndexedPassage(entry)];
     for (final passage in _index) {
@@ -128,12 +137,42 @@ class SupportCatalog {
 
   final List<SupportEntry> entries;
 
+  SupportEntry? entryById(String id) =>
+      entries.where((entry) => entry.id == id).firstOrNull;
+
+  bool requestsNearestStation(String question) {
+    final words = _tokens(_normalize(question));
+    return words.contains('محطه') &&
+        !words.any(_unrelatedStationWords.contains) &&
+        words.any(_nearestWords.contains);
+  }
+
   SupportEntry? findAnswer(String question, {SupportEntry? previous}) {
     final query = _normalize(question);
+    final words = _tokens(query);
+    if (words.contains('محطه')) {
+      if (words.any(_unrelatedStationWords.contains)) return null;
+      if (words.contains('تطبيق')) return entryById('find-station');
+      if (words.any(_mapWords.contains) || words.length == 1) {
+        return entryById('company-stations-map');
+      }
+    }
+    if (words.contains('شحن') &&
+        (words.contains('بطاقه') || words.contains('رصيد')) &&
+        words.difference(const {
+          'شحن',
+          'بطاقه',
+          'رصيد',
+          'وقود',
+          'top',
+          'up',
+          'my',
+        }).isEmpty) {
+      return entryById('top-up');
+    }
     final exact = _index.where((passage) => passage.phrases.contains(query));
     if (exact.isNotEmpty) return exact.length == 1 ? exact.single.entry : null;
 
-    final words = _tokens(query);
     if (words.isEmpty) return null;
     final paddedQuery = ' $query ';
     final direct = _index.where(
@@ -151,8 +190,7 @@ class SupportCatalog {
       final answer = _rank(related, words, contextual: true);
       if (answer != null) return answer;
     }
-    if (direct.length > 1) return null;
-    if (direct.isNotEmpty) {
+    if (direct.length == 1) {
       final passage = direct.single;
       final phraseCoversQuery = passage.phrases.any(
         (phrase) =>
@@ -161,7 +199,32 @@ class SupportCatalog {
       );
       if (phraseCoversQuery) return passage.entry;
     }
-    return _rank(_index, words);
+    final answer = direct.length > 1 ? null : _rank(_index, words);
+    if (answer != null && answer.id != 'find-station') return answer;
+    if (words.contains('محطه') &&
+        words.difference(_stationRequestWords).isEmpty) {
+      return entryById('company-stations-map');
+    }
+    return null;
+  }
+
+  SupportEntry? localAction(String question, SupportEntry? match) {
+    final words = _tokens(_normalize(question));
+    if (match?.id == 'check-balance' ||
+        match?.id == 'find-station' ||
+        (match?.route != null && words.any(_appActionWords.contains))) {
+      return match;
+    }
+    if (words.any(_appActionWords.contains) && !words.any(_mapWords.contains)) {
+      if (words.contains('محطه') &&
+          !words.any(_unrelatedStationWords.contains)) {
+        return entryById('find-station');
+      }
+      if (words.contains('شحن')) return entryById('top-up');
+      if (words.contains('رصيد')) return entryById('check-balance');
+      if (words.contains('فواتير')) return entryById('view-invoices');
+    }
+    return null;
   }
 
   List<SupportEntry> onlineSourcesFor(
@@ -235,6 +298,82 @@ class SupportCatalog {
   }
 }
 
+const _nearestWords = {
+  'اقرب',
+  'قريب',
+  'nearby',
+  'nearest',
+  'closest',
+  'near',
+  'جنبي',
+  'بقربي',
+};
+const _mapWords = {'خريطه', 'خرايط', 'خريطتها', 'map'};
+const _appActionWords = {
+  'افتح',
+  'افتحلي',
+  'فرجيني',
+  'ورجيني',
+  'عرض',
+  'وديني',
+  'خذني',
+  'open',
+  'show',
+};
+const _unrelatedStationWords = {
+  'police',
+  'train',
+  'railway',
+  'metro',
+  'subway',
+  'bus',
+  'space',
+  'weather',
+  'قطار',
+  'مترو',
+  'باص',
+  'حافلات',
+  'شرطه',
+  'فضاء',
+  'فضائيه',
+  'ارصاد',
+};
+const _stationRequestWords = {
+  'محطه',
+  'وقود',
+  'موقع',
+  'مواقع',
+  'بلاقي',
+  'نلاقي',
+  'لاقي',
+  'احصل',
+  'اجد',
+  'لقي',
+  'اعثر',
+  'اعرف',
+  'اعطيني',
+  'بتورجيني',
+  'فرجيني',
+  'جيبلي',
+  'وينن',
+  'find',
+  'show',
+  'me',
+  'list',
+  'get',
+  'real',
+  'رسميه',
+  'حقيقيه',
+  'حقيقي',
+  'الفعليه',
+  'موقعها',
+  'golden',
+  'gate',
+  'غولدن',
+  'غولدين',
+  'غيت',
+};
+
 class _IndexedPassage {
   _IndexedPassage(this.entry)
     : phrases = entry.phrases.map(_normalize).toSet(),
@@ -288,11 +427,12 @@ final _stopWords = _normalize(
 ).split(' ').map(_baseWord).toSet();
 
 const _wordGroups = [
-  'محطه محطات station stations بمحطه',
-  'بطاقه بطاقات بطاقتي بطاقتك كرت كروت كرتي كارت card cards',
+  'محطه محطات station stations بمحطه بمحطات كازيه كازيات gasstation',
+  'تطبيق تطبيقكم تطبيقنا app application',
+  'بطاقه بطاقات بطاقتي بطاقتك كرت كروت كرتي كرتك كارت card cards',
   'اصدار استخراج طلع بطلع تطلع احصل استلم استلام تسليم',
   'رصيد رصيدي ارصده balance',
-  'شحن اشحن بشحن تعبئه عبي عبّي recharge topup',
+  'شحن اشحن اشحنها اشحنه بشحن تشحن بتشحن تعبئه عبي عبّي recharge topup',
   'مازوت ديزل diesel',
   'بنزين بنزينه benzine gasoline',
   'وقود محروقات مشتقات fuel',
@@ -341,9 +481,12 @@ bool _isOfficialSource(Uri? url) =>
     url.userInfo.isEmpty &&
     !url.hasPort &&
     url.path == '/' &&
-    !url.hasQuery;
+    (!url.hasQuery ||
+        (url.fragment == 'stations' && url.query == 'stationView=all'));
 
 final _arabicMarks = RegExp(r'[\u064b-\u065f\u0670\u0640]');
+final _linkPattern = RegExp(r'https://[^\s<>\[\]()"“”]+', caseSensitive: false);
+final _linkPunctuation = RegExp(r'[.,;:!،؛؟]+$');
 final _alefVariants = RegExp('[أإآٱ]');
 final _arabicDigits = RegExp(r'[٠-٩۰-۹]');
 final _wordSeparators = RegExp(r'[^\p{L}\p{N}]+', unicode: true);

@@ -372,8 +372,8 @@
     {"id":"large-op-280","cardId":"fc-280","type":"initial","at":"2026-11-13T09:00:00Z","amountMinor":0}
   ],
   "stations": [
-    {"id":"dam-depot","name":{"en":"South Depot","ar":"محطة المستودع الجنوبي"}},
-    {"id":"hms-junction","name":{"en":"Junction Station","ar":"محطة التقاطع"}}
+    {"id":"dam-depot","name":{"en":"Marota City – Damascus","ar":"ماروتا سيتي – دمشق"}},
+    {"id":"hms-junction","name":{"en":"Hassia – Homs","ar":"حسياء – حمص"}}
   ],
   "sales": [
     {"id":"sale-001","receipt":"RC-3104","cardId":"fc-101","productId":"diesel","stationId":"dam-depot","at":"2026-11-25T09:12:00Z","quantityLiters":33,"unitPriceMinor":50000,"totalMinor":1650000},
