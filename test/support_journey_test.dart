@@ -137,7 +137,7 @@ void main() {
     );
     expect(
       find.text('Source: Golden Gate website').hitTestable(),
-      findsNothing,
+      findsOneWidget,
     );
     await enterQuestion('check balance');
     await tap(find.byTooltip('Send question'));
@@ -150,7 +150,7 @@ void main() {
     expect(find.textContaining('ماروتا سيتي').hitTestable(), findsOneWidget);
     expect(
       find.textContaining('Source: Customer guide').hitTestable(),
-      findsNothing,
+      findsOneWidget,
     );
     await enterQuestion('Who are you?');
     await tap(find.byTooltip('Send question'));

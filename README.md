@@ -8,8 +8,11 @@ Use Flutter 3.44.2 and an Android emulator or USB-connected Android device.
 
 ```sh
 flutter pub get
+flutter gen-l10n
 flutter run -d <android-device-id>
 ```
+
+Run `flutter gen-l10n` after changing the ARB files or switching to a branch with translation changes. Generate the files before running `flutter analyze --no-pub` or `flutter test --no-pub`.
 
 Sign in with demo number `0900000000` and code `246810`. The app starts in Arabic. Use the language button to switch to English. The number and code are read from [bundled JSON](assets/demo/standard/auth.json). See the [fixture editing guide](assets/demo/README.md) for the retry scenario and asset updates.
 

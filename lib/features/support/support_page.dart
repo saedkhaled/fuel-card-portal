@@ -91,7 +91,7 @@ class _SupportPageState extends State<SupportPage> {
       if (SupportGemini.isPrivateQuestion(question)) {
         reply = (
           text: labels.supportPrivateAccount,
-          sources: [if (action != null) action],
+          sources: [?action],
           online: false,
         );
       } else if (action != null) {
@@ -106,11 +106,7 @@ class _SupportPageState extends State<SupportPage> {
               : null,
         );
         if (generated != null) {
-          reply = (
-            text: generated,
-            sources: [if (match != null) match],
-            online: true,
-          );
+          reply = (text: generated, sources: [?match], online: true);
         } else if (match != null) {
           reply = (
             text: match.id == SupportCatalog.assistantIdentityId
@@ -358,8 +354,7 @@ class _SupportTurn extends StatelessWidget {
     final sources = reply?.sources ?? const <SupportEntry>[];
     final sections = {
       if (reply?.online != true)
-        for (final source in sources)
-          if (source.guideSection case final section?) section,
+        for (final source in sources) ?source.guideSection,
     };
     final urls = {
       for (final source in sources)

@@ -495,8 +495,9 @@ class _StationWebsiteLink extends StatelessWidget {
         if (await launchUrl(
           officialStationsMap,
           mode: LaunchMode.externalApplication,
-        ))
+        )) {
           return;
+        }
       } on Exception {
         // A device may have no enabled browser.
       }
