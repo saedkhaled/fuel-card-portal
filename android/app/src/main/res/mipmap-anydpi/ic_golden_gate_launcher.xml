@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:width="48dp" android:height="48dp" android:gravity="center">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/golden_gate_launcher_background" />
+            <corners android:radius="9dp" />
+        </shape>
+    </item>
+    <item android:width="48dp" android:height="48dp" android:gravity="center">
+        <inset android:drawable="@drawable/ic_golden_gate_mark" android:inset="10%" />
+    </item>
+</layer-list>

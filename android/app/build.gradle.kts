@@ -6,11 +6,11 @@ plugins {
 
 val launcherResources = providers.environmentVariable("PORTAL_LAUNCHER_RES")
     .map { file(it) }
-    .getOrElse(file("${System.getProperty("user.home")}/.config/fleet-cards-demo/launcher-res"))
-val hasCompanyLauncher = launcherResources.isDirectory
+    .orNull
+    ?.takeIf { it.isDirectory }
 
 android {
-    if (hasCompanyLauncher) {
+    if (launcherResources != null) {
         sourceSets.getByName("main").res.srcDir(launcherResources)
     }
 
@@ -26,7 +26,7 @@ android {
     defaultConfig {
         applicationId = "com.example.fleet_cards_demo"
         manifestPlaceholders["portalLauncherIcon"] =
-            if (hasCompanyLauncher) "@mipmap/ic_launcher" else "@drawable/ic_fleet_launcher"
+            if (launcherResources != null) "@mipmap/ic_launcher" else "@mipmap/ic_golden_gate_launcher"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24

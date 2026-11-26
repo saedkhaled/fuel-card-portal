@@ -84,3 +84,8 @@ Re-run [V01–V09](../verification.md#automated-coverage) after implementation. 
 - `aapt2 dump resources` and `aapt2 dump xmltree` confirmed the legacy mipmaps and adaptive foreground in five densities, the white background, and the Stage inset. All ten packaged PNGs matched the original APK byte for byte. With `PORTAL_LAUNCHER_RES` pointed at an absent directory, `./gradlew --offline :app:processReleaseMainManifest` resolved the demo icon.
 - Built with `flutter build apk --release --target-platform android-arm64`. `apksigner verify` passed. APK `/tmp/fleet-launcher-qa.vx6jNL/fleet-cards-golden-gate-branded-arm64.apk`, SHA-256 `fd46362180456b0ae88a4564adc285cf049049dc310c0644a02281153294ea79`.
 - Installed with `adb -s emulator-5554 install -r` on Android 16/API 36. Compared the icons in Android App Info. The two 144 × 144 icon crops were pixel-identical. Launched the updated app and confirmed its activity was in the foreground.
+
+### Bundled Android launcher icon
+
+- The default Android launcher icon now uses the public Golden Gate mark with the existing brand blue. An explicit `PORTAL_LAUNCHER_RES` remains available for custom Android launcher resources.
+- AAPT2 compiled and linked the bundled launcher resources against Android API 36. The resource table contains both the legacy and Android 8+ adaptive variants.
